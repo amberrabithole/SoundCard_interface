@@ -1,15 +1,28 @@
-\documentclass[11pt, a4paper]{article}
-\usepackage[a4paper, margin=2.5cm]{geometry}
-\usepackage{fontspec}
-\usepackage[english, bidi=basic, provide=*]{babel}
-\babelprovide[import, onchar=ids fonts]{english}
-\babelfont{rm}{Noto Sans}
+\documentclass[11pt, letterpaper]{article}
+\usepackage[letterpaper, margin=1in]{geometry}
+
+% Standard encoding and modern fonts for pdfLaTeX
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype} % Optimizes word spacing and eliminates overfull/underfull lines
+\usepackage[english]{babel}
+
+% Math and Layout Packages
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{array}
 \usepackage{enumitem}
 \usepackage{xcolor}
+
+% Custom left-aligned tabularx column (stops Underfull \hbox badness in tables)
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+% Hyperref and PDF Bookmarks
 \usepackage{hyperref}
+\usepackage{bookmark}
 
 \hypersetup{
     colorlinks=true,
@@ -25,32 +38,57 @@
 
 \begin{titlepage}
     \centering
-    \vspace*{1.5cm}
-    
-    {\Huge \textbf{ENGINEERING DESIGN DOCUMENT}}\\[0.8em]
-    {\LARGE High-Resolution Audio Test Bench Interface}\\[0.4em]
-    {\large A Modernized Pete Millett Soundcard Interface Replica for M-Audio Solo}\\[2.5cm]
-    
-    \textbf{Document Reference:} EDD-PMSI-SOLO-001 \\
-    \textbf{Revision:} 1.0 (Initial Design Baseline) \\
-    \textbf{Date:} October 2026 \\
-    \textbf{Classification:} Internal Engineering / Bench Specifications \\[3cm]
-    
-    \begin{tabularx}{0.85\textwidth}{lX}
-        \toprule
-        \textbf{Project Parameter} & \textbf{Specification} \\
-        \midrule
-        Host Soundcard Interface & M-Audio Solo (Unbalanced 1/4-inch Line/Inst Input) \\
-        Physical Working Distance & Short Patch Cable ($< 20\text{ cm}$, $C_{\text{parasitic}} \le 30\text{ pF}$) \\
-        Primary DC Power Source & Standard USB-C 5\,VDC ($V_{\text{BUS}}$) \\
-        Analog Rails & Fully Isolated Regulated $\pm 15\,\text{VDC}$ \\
-        Input Protection Threshold & $\ge 400\,\text{VDC}$ Blocking, Fault Current $\le 3\,\text{mA}$ \\
-        Architecture Baseline & Pete Millett Soundcard Interface (Optimized SMD Hybrid) \\
-        \bottomrule
-    \end{tabularx}
+    \vspace*{0.5cm}
+
+    % Institution / Subsystem Classification Header
+    % Institution / Subsystem Classification Header
+    {\small\bfseries Precision Audio Test Bench Infrastructure \quad\textperiodcentered\quad Hardware Release}\\[0.8em]
+\rule{\linewidth}{1.2pt}\\[0.4cm]
+
+    % Main Title Block
+    {\huge\bfseries Pete Millett Soundcard Interface Replica}\\[0.4em]
+    {\Large\color{black!75} Hardware Architecture \& Design Baseline for M-Audio Solo}\\[0.6cm]
+    \rule{\linewidth}{0.6pt}
 
     \vfill
-    {\small Bench Test \& Measurement Infrastructure Group}
+
+    % Engineering Document Metadata Table
+    \begin{minipage}{0.92\linewidth}
+        \centering
+        \begin{tabularx}{\linewidth}{>{\bfseries}l X >{\bfseries}l X}
+            Author: & Amanda Shen & Document ID: & EDD-PMSI-SOLO-001 \\
+            Role: & Lead Hardware Designer & Revision: & 1.0 (Design Freeze) \\
+            Date: & October 2026 & Target Host: & M-Audio Solo (1/4" Line) \\
+            Status: & Pre-Fabrication Baseline & Classification: & Internal Technical Doc \\
+        \end{tabularx}
+    \end{minipage}
+
+    \vfill
+
+    % System Baseline Specifications Summary Table
+    \begin{minipage}{0.95\linewidth}
+        \small
+        \begin{tabularx}{\linewidth}{>{\bfseries\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}X}
+            \toprule
+            System Parameter & Hardware Implementation Target \\
+            \midrule
+            Active Analog Front-End & Dual OPA1656 CMOS Op-Amps (Ultra-low bias drift, 53\,MHz GBW) \\
+            DC Offset Nulling & 100\,k$\Omega$ precision trim network ($R_{25}$) with onboard test pads (TP1/TP2) \\
+            Input Overvoltage Clamp & Back-to-back LND150 depletion MOSFETs + 1N4148W diodes ($\le 3$\,mA limit) \\
+            AC Coupling Threshold & 0.47\,$\mu$F 400\,V Metallized PP Film ($f_{-3\text{dB}} \approx 3.3$\,Hz, multi-pitch footprint) \\
+            Isolated Power Supply & XP Power JCA0305D03 (3\,W, 5\,V in, $\pm 15$\,V out, 300\,kHz, Faraday shield) \\
+            Power Input \& Safety & USB-C (6-pin power) with 1812 SMD PTC fuse + SMCJ6.0A TVS clamp \\
+            Output Impedance Buffer & $10\,\Omega$ native short-cable buffer ($<20$\,cm patch) + $36\,\Omega$ jumper pad \\
+            Chassis / Shield Ground & 2-position Ground-Reference / Float toggle switch (SW2) on input BNC \\
+            \bottomrule
+        \end{tabularx}
+    \end{minipage}
+
+    \vfill
+    \vspace{0.5cm}
+
+    % Bottom Footer
+    {\footnotesize\color{black!70} St. Robert Engineering \& Audio Electronics Laboratory \textperiodcentered\ Bench Series 2026}
 \end{titlepage}
 
 \tableofcontents
@@ -286,7 +324,7 @@ To ensure high-frequency stability with the 53\,MHz OPA1656 and preserve high CM
 \begin{table}[ht]
     \centering
     \small
-    \begin{tabularx}{\textwidth}{llX}
+    \begin{tabularx}{\linewidth}{@{} l l L @{}}
         \toprule
         \textbf{Circuit Path} & \textbf{Conductor Type} & \textbf{Routing Specification} \\
         \midrule
@@ -310,7 +348,9 @@ The complete assembly must be enclosed in an extruded aluminum enclosure (e.g., 
 \begin{table}[ht]
     \centering
     \small
-    \begin{tabularx}{\textwidth}{l p{2.8cm} l l >{\raggedright\arraybackslash}X}
+    
+    \begin{tabularx}{\linewidth}{@{} l l l l L @{}}
+    %\begin{tabularx}{\textwidth}{l p{2.8cm} l l >{\raggedright\arraybackslash}X}
         \toprule
         \textbf{Designator} & \textbf{Function} & \textbf{Original Part} & \textbf{Selected Part} & \textbf{Package / Notes} \\
         \midrule
@@ -331,7 +371,8 @@ The complete assembly must be enclosed in an extruded aluminum enclosure (e.g., 
 \begin{table}[ht]
     \centering
     \small
-    \begin{tabularx}{\textwidth}{l p{2.8cm} l l >{\raggedright\arraybackslash}X}
+    \begin{tabularx}{\linewidth}{@{} l l l l L @{}}
+        %\begin{tabularx}{\textwidth}{l p{2.8cm} l l >{\raggedright\arraybackslash}X}
         \toprule
         \textbf{Designator} & \textbf{Function} & \textbf{Original Part} & \textbf{Selected Part} & \textbf{Package / Notes} \\
         \midrule
