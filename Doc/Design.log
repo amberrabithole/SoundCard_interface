@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.9.30)  23 OCT 2026 22:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.9.30)  24 OCT 2026 00:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -630,163 +630,24 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 Package hyperref Info: Link coloring ON on input line 37.
-Package babel Info: Main language set to 'english'.
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.0pt on input line 44.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 10.0pt on input line 44.
-LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input line 44.
- (C:\Users\shenz\AppData\Roaming\MiKTeX\tex/latex/newtx\ts1ntxtlf.fd
-File: ts1ntxtlf.fd 2015/01/18 v1.0 fd file for TS1/ntxtlf
-)
-LaTeX Font Info:    Font shape `TS1/ntxtlf/b/n' will be
-(Font)              scaled to size 10.0pt on input line 44.
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 20.74pt on input line 48.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 20.74pt on input line 48.
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 14.4pt on input line 49.
- (C:\Users\shenz\AppData\Roaming\MiKTeX\tex/latex/newtx\ot1minntx.fd) (C:\Users\shenz\AppData\Roaming\MiKTeX\tex/latex/newtx\untxmia.fd) (C:\Users\shenz\AppData\Roaming\MiKTeX\tex/latex/newtx\untxsym.fd) (C:\Users\shenz\AppData\Roaming\MiKTeX\tex/latex/newtx\untxsyc.fd)
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 9.0pt on input line 94.
-LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
-(Font)              scaled to size 9.0pt on input line 94.
- [1
 
-{C:/Users/shenz/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/enc/dvips/tex-gyre/q-ts1.enc}{C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc}]
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 14.4pt on input line 97.
- (Design.toc
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
+c:/Git-Projects/SoundCard_interface/Doc/Design.tex:37: I can't write on file `Design.pdf'.
+(Press Enter to retry, or Control-C to exit; default file extension is `.pdf')
+Please type another file name for output
+c:/Git-Projects/SoundCard_interface/Doc/Design.tex:37: Emergency stop.
 <to be read again> 
-                   \relax 
-l.32 ... \& Mechanical Integration}{14}{section.9}
-                                                  % [1])
-\tf@toc=\write3
-\openout3 = `Design.toc'.
+                   \edef 
+l.37 \begin{document}
+                     
+*** (job aborted, file error in nonstop mode)
 
- [2]
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 8.0pt on input line 108.
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.1pt on input line 108.
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 111.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 12.0pt on input line 111.
-LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
-(Font)              scaled to size 10.95pt on input line 113.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 8.0pt on input line 114.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 6.1pt on input line 114.
- [3]
-LaTeX Font Info:    Font shape `OT1/minntx/b/n' will be
-(Font)              scaled to size 10.95pt on input line 149.
-LaTeX Font Info:    Font shape `OT1/minntx/b/n' will be
-(Font)              scaled to size 8.0pt on input line 149.
-LaTeX Font Info:    Font shape `OT1/minntx/b/n' will be
-(Font)              scaled to size 6.1pt on input line 149.
- [4]
-Overfull \hbox (0.45453pt too wide) in paragraph at lines 173--174
-[]\T1/ntxtlf/b/n/10.95 Connector Pinout: \T1/ntxtlf/m/n/10.95 Pro-vides two $\OML/ntxmi/m/it/10.95 V[]$ \T1/ntxtlf/m/n/10.95 pins, two Ground pins, and two Con-fig-u-ra-tion Chan-nel (CC1/CC2)
- []
-
-[5]
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 10.95pt on input line 188.
- [6] [7] [8]
-LaTeX Font Info:    Font shape `OT1/minntx/m/n' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `OT1/minntx/m/n' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `OT1/minntx/m/n' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `OML/ntxmi/m/it' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `OML/ntxmi/m/it' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `OML/ntxmi/m/it' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `OT1/minntx/b/n' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `OT1/minntx/b/n' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `OT1/minntx/b/n' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 6.6pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 12.0pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 8.8pt on input line 329.
-LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 6.6pt on input line 329.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 329.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 329.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 329.
-
-[9] [10] [11]
-Overfull \hbox (3.15184pt too wide) in paragraph at lines 378--379
-\T1/ntxtlf/m/n/10.95 To achieve high-voltage clamp-ing with zero audio-band dis-tor-tion, this de-sign keeps ultra-fast, low-capacitance
- []
-
-[12] [13] [14] [15] [16] (Design.aux)
- ***********
-LaTeX2e <2026-06-01>
-L3 programming layer <2020/03/25>
- ***********
- ) 
+ 
 Here is how much of TeX's memory you used:
- 18083 strings out of 467392
- 283368 string characters out of 5415748
- 745531 words of memory out of 5000000
- 47070 multiletter control sequences out of 15000+600000
- 746096 words of font info for 184 fonts, out of 8000000 for 9000
+ 17471 strings out of 467392
+ 272280 string characters out of 5415748
+ 725937 words of memory out of 5000000
+ 46632 multiletter control sequences out of 15000+600000
+ 632429 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,17n,79p,1043b,801s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/NewTXMI.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/NewTXMI5.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/NewTXMI7.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/tex-gyre/qtmb.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/tex-gyre/qtmr.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/txexs.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/txmiaX.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/txsys.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/ztmb.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/ztmr.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/ztmri.pfb>
-Output written on Design.pdf (17 pages, 283402 bytes).
-PDF statistics:
- 378 PDF objects out of 1000 (max. 8388607)
- 92 named destinations out of 1000 (max. 500000)
- 21273 words of extra memory for PDF output out of 24883 (max. 10000000)
-
+ 74i,1n,79p,1043b,166s stack positions out of 10000i,1000n,20000p,200000b,200000s
+c:/Git-Projects/SoundCard_interface/Doc/Design.tex:37:  ==> Fatal error occurred, no output PDF file produced!
