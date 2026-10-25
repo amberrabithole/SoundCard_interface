@@ -661,13 +661,17 @@
         "uuid": "7297adbd-96ee-49f2-9956-85a279898d34"
       }
     ],
-    "used_designators": "U1-4,D1-9,#PWR1-29,F1-2,R1-11,J1-3,C1-18,SW1-2,Q1-4,JP1-4,DZ1-2",
+    "used_designators": "U1-10,D1-29,#PWR1-72,F1-2,R1-35,J1-9,C1-39,SW1-4,Q1-12,JP1-10,DZ1-8",
     "variants": []
   },
   "sheets": [
     [
       "7297adbd-96ee-49f2-9956-85a279898d34",
       "Root"
+    ],
+    [
+      "a47817b7-151a-4a02-8d06-4693f1d66636",
+      "Channel2"
     ]
   ],
   "text_variables": {},

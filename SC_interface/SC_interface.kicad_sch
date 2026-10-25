@@ -7701,7 +7701,7 @@
 		)
 		(uuid "fe793bf7-55a7-4a1c-8a9c-a42b1e863e53")
 	)
-	(label "VOut_pos"
+	(label "VOut_pos1"
 		(at 80.01 167.64 0)
 		(effects
 			(font
@@ -7711,7 +7711,7 @@
 		)
 		(uuid "2c1e1d0c-108c-4be8-8051-7ca83ac9db28")
 	)
-	(label "VOut_pos"
+	(label "VOut_pos1"
 		(at 132.08 167.64 0)
 		(effects
 			(font
@@ -7721,7 +7721,7 @@
 		)
 		(uuid "401c020f-d550-4776-9279-945bd0795e34")
 	)
-	(label "VOut_neg"
+	(label "VOut_neg1"
 		(at 132.08 170.18 0)
 		(effects
 			(font
@@ -7741,7 +7741,7 @@
 		)
 		(uuid "dcf6ddc8-bb0c-401f-9761-41bcda2f81ff")
 	)
-	(label "VOut_neg"
+	(label "VOut_neg1"
 		(at 80.01 170.18 0)
 		(effects
 			(font
@@ -13019,7 +13019,7 @@
 				)
 			)
 		)
-		(property "Value" "SW_Select"
+		(property "Value" "SW_Select1"
 			(at 63.5 87.63 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13260,10 +13260,9 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "b252d9e6-d2b3-413f-a81b-74316ae38173")
 		(property "Reference" "J1"
-			(at 28.2574 85.09 0)
+			(at 23.114 86.868 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -13273,7 +13272,7 @@
 			)
 		)
 		(property "Value" "Input1"
-			(at 28.2574 87.63 0)
+			(at 21.59 90.932 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16251,6 +16250,52 @@
 				(path "/7297adbd-96ee-49f2-9956-85a279898d34"
 					(reference "Q2")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet
+		(at 0 219.71)
+		(size 298.45 173.99)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "a47817b7-151a-4a02-8d06-4693f1d66636")
+		(property "Sheetname" "Channel2"
+			(at 0 218.9984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Channel2.kicad_sch"
+			(at 0 394.2846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "SC_interface"
+				(path "/7297adbd-96ee-49f2-9956-85a279898d34"
+					(page "2")
 				)
 			)
 		)
