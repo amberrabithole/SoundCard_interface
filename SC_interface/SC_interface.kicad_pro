@@ -260,7 +260,16 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      [
+        "pin_to_pin|1727200|635000|8b6c474b-f135-49d4-bd82-b83e3344ef3e|b9370dc5-a733-4d49-b6b5-605fe98d4979|/7297adbd-96ee-49f2-9956-85a279898d34|/7297adbd-96ee-49f2-9956-85a279898d34|/7297adbd-96ee-49f2-9956-85a279898d34",
+        ""
+      ],
+      [
+        "pin_to_pin|1727200|685800|9b41f885-b239-4c21-bde3-a6f1d81cd149|b9370dc5-a733-4d49-b6b5-605fe98d4979|/7297adbd-96ee-49f2-9956-85a279898d34|/7297adbd-96ee-49f2-9956-85a279898d34|/7297adbd-96ee-49f2-9956-85a279898d34",
+        ""
+      ]
+    ],
     "meta": {
       "version": 0
     },
@@ -534,7 +543,7 @@
   "schematic": {
     "annotate_start_num": 0,
     "annotation": {
-      "method": 0,
+      "method": 1,
       "sort_order": 0
     },
     "bom_export_filename": "${PROJECTNAME}.csv",
@@ -661,7 +670,7 @@
         "uuid": "7297adbd-96ee-49f2-9956-85a279898d34"
       }
     ],
-    "used_designators": "U1-10,D1-29,#PWR1-72,F1-2,R1-35,J1-9,C1-39,SW1-4,Q1-12,JP1-10,DZ1-8",
+    "used_designators": "U1-10,U101,U201-203,U301-303,D1-29,D101-104,D201-208,D301-308,#PWR1-72,#PWR101-108,#PWR201-221,#PWR301-321,F1-2,F101,#FLG101-103,R1-35,R101-104,R201-211,R301-311,J1-9,J101-102,J201-203,J301-303,C1-39,C101-108,C201-210,C301-310,SW1-4,SW101-102,SW201,SW301,Q1-12,Q201-204,Q301-304,JP1-10,JP201-202,JP301-302,DZ1-8,DZ201-202,DZ301-302,TP101-103,TP201-202,TP301-302",
     "variants": []
   },
   "sheets": [
@@ -670,8 +679,12 @@
       "Root"
     ],
     [
-      "a47817b7-151a-4a02-8d06-4693f1d66636",
-      "Channel2"
+      "77491be2-5e51-4ba7-a51c-7ddd97031085",
+      "Input_ChannelL"
+    ],
+    [
+      "6c06333c-c9e5-43ff-8d0a-d7cc8d096d1a",
+      "Input_ChannelR"
     ]
   ],
   "text_variables": {},
