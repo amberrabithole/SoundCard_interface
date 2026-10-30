@@ -1,36 +1,49 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{\numberline {1}Executive Design Summary \& Tri-Host Architecture}{3}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Key Design Modifications from Baseline}{3}{subsection.1.1}%
-\contentsline {section}{\numberline {2}System Architecture \& Host Comparison}{4}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Why the Oscilloscope Cannot Fully Replace the Soundcard}{4}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Why the Oscilloscope Requires This Active Front-End}{4}{subsection.2.2}%
-\contentsline {section}{\numberline {3}DC Power Supply \& Primary Crowbar Architecture}{5}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Power Input Connector (USB-C 6-Pin)}{5}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Active Crowbar Protection Subsystem}{5}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Isolated DC-DC Converter (XP Power JCA0305D03)}{6}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Bulk Storage and High-Frequency Filtering Network}{6}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Power Budget for Dual-Channel Architecture}{7}{subsection.3.5}%
-\contentsline {section}{\numberline {4}Analog Front-End (AFE) Signal Conditioning}{7}{section.4}%
-\contentsline {subsection}{\numberline {4.1}High-Voltage DC Blocking Capacitors (C2, C3, C20, C21)}{7}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Active Protection Clamping \& Low-Noise Current Limiting}{8}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Thermal Noise Analysis \& LND150 Substitution}{8}{subsubsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.3}Why the Input Attenuator Ladder Must Be Retained}{9}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Rotary Range Switch Implementation}{9}{subsection.4.4}%
-\contentsline {section}{\numberline {5}Analog Buffer, Instrumentation Amplifier \& CMRR Optimization}{9}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Operational Amplifier Selection: Texas Instruments OPA1656IDR}{9}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Elimination of the DC Nulling Network ($R_{25}$)}{10}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Removal of Grounding Switch (SW5) \& Monitor Switch (SW3)}{10}{subsection.5.3}%
-\contentsline {section}{\numberline {6}High-Frequency Stability, Layout \& Oscillation Prevention}{11}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Active Layout Stability Rules}{11}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}PCB Floorplan \& Partitioning Strategy}{11}{subsection.6.2}%
-\contentsline {section}{\numberline {7}Dual-Level Output Clamping \& Driver Subsystem}{11}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Why Zener Diodes Cannot Be Placed in the Signal Path}{11}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}The Off-Signal Zener Bias Bridge Topology}{12}{subsection.7.2}%
-\contentsline {subsubsection}{\numberline {7.2.1}Circuit Operation and Clamping Thresholds}{12}{subsubsection.7.2.1}%
-\contentsline {subsubsection}{\numberline {7.2.2}Bias Resistor Sizing and Noise Suppression}{13}{subsubsection.7.2.2}%
-\contentsline {section}{\numberline {8}Universal Dual Output Stage: DRV135 \& BNC Tap}{13}{section.8}%
-\contentsline {section}{\numberline {9}System Chassis Wiring \& Mechanical Integration}{14}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Chassis Construction and RF Shielding}{14}{subsection.9.1}%
-\contentsline {section}{\numberline {10}Consolidated Hardware Bill of Materials (BOM)}{14}{section.10}%
-\contentsline {section}{\numberline {11}Bench Commissioning \& Verification Workflow}{15}{section.11}%
-\contentsline {section}{\numberline {12}Summary \& Next Steps}{16}{section.12}%
+\contentsline {section}{Document Control \& Baseline Specifications}{3}{section*.2}%
+\contentsline {section}{\numberline {1}Executive Design Summary \& Tri-Host Architecture}{5}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Key Design Modifications from Baseline}{5}{subsection.1.1}%
+\contentsline {section}{\numberline {2}System Architecture \& Cross-Host Metrology}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Why the Oscilloscope Cannot Fully Replace the Soundcard}{7}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Why the Oscilloscope Requires This Active Front-End}{7}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Comparison with DC Telemetry Front-End (TI INA228)}{7}{subsection.2.3}%
+\contentsline {section}{\numberline {3}DC Power Supply, Rail Clamping \& Enclosure Grounding}{8}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Power Input Connector \& Dual-Pole Master Switch ($SW_{102}$)}{8}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Active Primary Crowbar Protection ($F_{101}, D_{101}$)}{8}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Isolated DC-DC Converter ($U_{101}$) \& Analog Rail Switch ($SW_{101}$)}{8}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}3-LED Diagnostic Monitoring Subsystem}{9}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Secondary TVS Rail Clamping Kickback Protection ($D_{105}, D_{106}$)}{9}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Chassis Ground Isolation Lug Network ($J_{102}, R_{104}, C_{107}$)}{10}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Power Budget for Dual-Channel Architecture}{10}{subsection.3.7}%
+\contentsline {section}{\numberline {4}Analog Front-End (AFE) Signal Conditioning \& Protection}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}High-Voltage DC Blocking Capacitors (C302, C303, C402, C403)}{11}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Active Protection Limiting: The $4.7\,\text {k}\Omega $ Fusible Resistor}{11}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Johnson Thermal Noise Analysis}{11}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Overvoltage Fault Current \& Air-Gap PCB Isolation}{12}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}Diode Selection: Upgrade from 1N4148 to BAV199}{12}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Why the Input Attenuator Ladder Must Be Retained}{12}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Attenuator Ladder, Switch Selection \& Interconnect Wiring}{13}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Why Frequency Compensation Capacitors Are Not Required}{13}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Resistor Power Dissipation \& Model Selection}{13}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Rotary Switch Selection: Panel-Mount Models}{14}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Resistor Mounting: Tangential Bending vs. Radial Halo}{14}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Why 5-Wire Bundles and Shielded Coax Fail at 2 MHz}{14}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}The 3-Wire ``Guarded Trio'' Harness \& 5-Pin PCB Header}{15}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Analog Buffer, Instrumentation Amplifier \& CMRR Optimization}{15}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Operational Amplifier Selection: Texas Instruments OPA1656IDR}{15}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}OPA1656 Feedback Optimization for 2 MHz Flatness}{16}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Elimination of the DC Nulling Network ($R_{25}$)}{16}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Removal of Grounding Switch (SW5) \& Monitor Switch (SW3)}{17}{subsection.6.4}%
+\contentsline {section}{\numberline {7}High-Frequency Stability, Layout \& Oscillation Prevention}{17}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Active Layout Stability Rules}{17}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}PCB Floorplan \& Partitioning Strategy}{18}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Dual-Level Output Clamping \& Universal Driver Subsystem}{18}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Why Zener Diodes Cannot Be Placed in the Signal Path}{18}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}The Off-Signal Zener Bias Bridge Topology}{18}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}Clamping Threshold Calculations}{19}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}Bias Resistor Sizing and Noise Suppression}{20}{subsubsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.3}Universal Dual Output Stage: DRV135 \& Dedicated Scope BNC Tap}{20}{subsection.8.3}%
+\contentsline {section}{\numberline {9}System Chassis Wiring \& Mechanical Integration}{20}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Chassis Construction and RF Shielding}{21}{subsection.9.1}%
+\contentsline {section}{\numberline {10}Consolidated Hardware Bill of Materials (BOM)}{22}{section.10}%
+\contentsline {section}{\numberline {11}Bench Commissioning \& Verification Workflow}{24}{section.11}%
+\contentsline {section}{\numberline {12}Summary \& Next Steps}{24}{section.12}%

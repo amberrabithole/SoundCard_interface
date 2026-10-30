@@ -1,144 +1,196 @@
 \documentclass[11pt, letterpaper]{article}
 \usepackage[letterpaper, margin=1in]{geometry}
 
-% Standard encoding and robust modern fonts for pdfLaTeX & Adobe Acrobat
+% Standard encoding and robust fonts for pdfLaTeX / LuaLaTeX
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{newtxtext,newtxmath}
-\usepackage[expansion=false]{microtype} % Disables font expansion to eliminate Acrobat font extraction errors
+\usepackage[expansion=false]{microtype}
 \usepackage[english]{babel}
 
-% Math and Layout Packages
+% Math, Tables, and Structural Packages
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{enumitem}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
+\usepackage{float}
 
-% Custom left-aligned tabularx column (eliminates Underfull \hbox badness 10000 in tables)
+% TikZ for native vector diagrams
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc}
+
+% Custom left- and right-aligned tabularx columns
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}
 \newcolumntype{R}{>{\raggedleft\arraybackslash}X}
 
-% Hyperref and PDF Bookmarks
-\usepackage{hyperref}
-\usepackage{bookmark}
+\definecolor{accentblue}{RGB}{20, 65, 130}
+\definecolor{slate}{RGB}{70, 85, 105}
+\definecolor{lightgray}{RGB}{245, 247, 250}
 
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    urlcolor=blue,
-    citecolor=black
-}
+% Hyperref (robust bookmarks without fragile bookmark.sty)
+\usepackage[bookmarks=true, colorlinks=true, linkcolor=accentblue, urlcolor=blue, citecolor=black]{hyperref}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 
 \begin{document}
 
+% =========================================================================
+% COVER PAGE (Clean layout: No parameter tables or target hosts)
+% =========================================================================
 \begin{titlepage}
     \centering
-    \vspace*{0.5cm}
+    \vspace*{2.0cm}
 
-    % Institution / Subsystem Classification Header
-    {\small\bfseries Precision Audio Test Bench Infrastructure \quad\textperiodcentered\quad Hardware Architecture Release}\\[0.8em]
-    \rule{\linewidth}{1.2pt}\\[0.4cm]
+    {\small\bfseries\color{slate} Precision Audio Test Bench Infrastructure \quad\textperiodcentered\quad Hardware Architecture Release}\\[1.0em]
+    {\color{accentblue}\rule{\linewidth}{1.4pt}}\\[0.6cm]
 
-    % Main Title Block
-    {\huge\bfseries Dual-Channel Pete Millett Interface Replica}\\[0.4em]
-    {\Large\color{black!75} Universal High-Voltage Active Differential Probe \& Audio-Band Conditioning AFE}\\[0.6cm]
-    \rule{\linewidth}{0.6pt}
+    {\huge\bfseries Dual-Channel Pete Millett Interface Replica}\\[0.5cm]
+    {\Large\color{slate} Universal $150\,\text{V}_{\text{RMS}}$ Active Differential Probe \& Audio-Band Conditioning AFE}\\[0.8cm]
+    {\color{accentblue}\rule{\linewidth}{0.8pt}}
 
     \vfill
 
-    % Engineering Document Metadata Table (Using L columns to eliminate Underfull \hbox badness)
-    \begin{minipage}{0.95\linewidth}
+    \begin{minipage}{0.75\linewidth}
         \centering
-        \begin{tabularx}{\linewidth}{>{\bfseries}l L >{\bfseries}l L}
-            Target Hosts: & M-Audio Solo, MOTU M4, SDS804X HD & Document ID: & EDD-PMSI-UNIV-002 \\
-            Topology: & Dual-Channel Galvanically Isolated AFE & Revision: & 2.0 (Design Freeze) \\
-            Date: & October 2026 & Classification: & Open Engineering Baseline \\
-            Status: & Pre-Fabrication Release & Lab Series: & Bench Audio Instrumentation \\
-        \end{tabularx}
+        \textbf{Document ID:} EDD-PMSI-UNIV-003\\[0.3em]
+        \textbf{System Architecture:} Revision 3.1 (Consolidated Engineering Baseline)\\[0.3em]
+        \textbf{Classification:} Open Engineering Metrology Specification\\[0.3em]
+        \textbf{Target Hosts:} M-Audio Solo, MOTU M4, Siglent SDS804X HD\\[0.3em]
+        \textbf{Date:} October 2026\\[0.3em]
+        \textbf{Laboratory:} Audio Electronics \& Metrology Engineering Group
     \end{minipage}
 
     \vfill
+    \vspace{1.5cm}
 
-    % System Baseline Specifications Summary Table
-    \begin{minipage}{0.95\linewidth}
-        \small
-        \begin{tabularx}{\linewidth}{>{\bfseries\raggedright\arraybackslash}p{4.2cm} L}
-            \toprule
-            System Parameter & Hardware Implementation Target \\
-            \midrule
-            Architecture Format & Dual-Channel (Stereo Ch 1 / Ch 2), fully mirrored analog signal paths \\
-            Active Input Buffers & Dual OPA1656 CMOS Op-Amps per channel (10\,pA bias, 2.9\,nV/$\sqrt{\text{Hz}}$, 53\,MHz) \\
-            Overvoltage Current Limit & Back-to-back LND150 depletion MOSFETs ($\le 3.0$\,mA fault current, 500\,V rating) \\
-            Difference Amplifier Stage & Texas Instruments INA134 (Pin 1 tied to AGND, $>90$\,dB guaranteed CMRR) \\
-            DC Offset Trimming & Completely eliminated; laser-trimmed INA134 preserves maximum CMRR \\
-            Selectable Output Clamping & Dual-range off-signal Zener bias bridge ($\pm 1.4$\,V Solo mode / $\pm 5.4$\,V M4 \& Scope mode) \\
-            Analog Output Stages & Dual output per channel: Balanced 1/4" TRS (DRV135) + Unbalanced BNC ($200\,\Omega$) \\
-            Input Ground Switching & Permanently eliminated; full floating differential input prevents Earth shorts \\
-            AC Coupling Threshold & 0.47\,$\mu$F 400\,V Metallized PP Film ($f_{-3\text{dB}} \approx 3.38$\,Hz, multi-pitch footprint) \\
-            DC Galvanic Isolation & XP Power JCA0305D03 (3\,W, 5\,V in, $\pm 15$\,V out, 1,500\,VDC isolation, Faraday shield) \\
-            Power Input \& Safety & USB-C (6-pin power) with 1812 SMD PTC fuse + SMCJ6.0A TVS crowbar clamp \\
-            Bench Host Versatility & M-Audio Solo (Audio FFT), MOTU M4 (Pro Audio), Siglent SDS804X HD (Scope) \\
-            \bottomrule
-        \end{tabularx}
-    \end{minipage}
-
-    \vfill
-    \vspace{0.5cm}
-
-    % Bottom Footer
-    {\footnotesize\color{black!70} Audio Electronics \& Engineering Laboratory \textperiodcentered\ Bench Instrumentation Series 2026}
+    {\footnotesize\color{slate} Bench Instrumentation Series \textperiodcentered\ Dual-Channel Isolated AFE \textperiodcentered\ October 2026}
 \end{titlepage}
 
+% =========================================================================
+% TABLE OF CONTENTS
+% =========================================================================
 \tableofcontents
 \newpage
 
+% =========================================================================
+% FIRST PAGE POST-TOC: DOCUMENT METADATA & BASELINE SPECIFICATIONS
+% =========================================================================
+\section*{Document Control \& Baseline Specifications}
+\addcontentsline{toc}{section}{Document Control \& Baseline Specifications}
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabularx}{\linewidth}{@{} >{\bfseries}l L >{\bfseries}l L @{}}
+        \toprule
+        Target Hosts: & M-Audio Solo, MOTU M4, SDS804X HD & Document ID: & EDD-PMSI-UNIV-003 \\
+        Topology: & Dual-Channel Galvanically Isolated AFE & Revision: & 3.1 (Consolidated Freeze) \\
+        Date: & October 2026 & Classification: & Open Engineering Baseline \\
+        Status: & Pre-Fabrication Release & Primary Bandwidth: & $3.35\,\text{Hz} - 2.5\,\text{MHz}$ \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Document control and target host integration baseline.}
+    \label{tab:doc_control}
+\end{table}
+
+\vspace{0.2cm}
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabularx}{\linewidth}{@{} >{\bfseries\raggedright\arraybackslash}p{4.3cm} L @{}}
+        \toprule
+        System Parameter & Hardware Implementation Target \\
+        \midrule
+        Architecture Format & Dual-Channel (Stereo Ch 1 / Ch 2), fully mirrored analog signal paths \\
+        Coupling Mode & Strictly AC-Coupled via $0.47\,\mu\text{F}$ $400\,\text{V}$ Metallized Polypropylene Film ($f_{-3\text{dB}} \approx 3.35\,\text{Hz}$, multi-pitch footprint with $8.5\,\text{mm}$ width clearance) \\
+        Maximum Continuous Voltage & $150\,\text{V}_{\text{RMS}}$ continuous ($212\,\text{V}_{\text{peak}}$) across all attenuator ranges ($100\%$ duty cycle) \\
+        Maximum Intermittent Voltage & $250\,\text{V}_{\text{RMS}}$ intermittent ($353\,\text{V}_{\text{peak}}$) for up to 5 minutes duration \\
+        Wideband Scope Tap Bandwidth & Flat to within $-0.5\,\text{dB}$ at $2.0\,\text{MHz}$ on $1\times$ and $10\times$ ranges; $-3\,\text{dB}$ corner $\ge 2.5\,\text{MHz}$ \\
+        Attenuator Ladder Network & $101.0\,\text{k}\Omega$ total ($R_{302}=90.9\,\text{k}\Omega$, $R_{303}=9.09\,\text{k}\Omega$, $R_{304}=909\,\Omega$ in $0.6\,\text{W}$ $500\,\text{V}$ Vishay CMF55 axial film mounted on switch lugs; $R_{305}=102\,\Omega$ on PCB) \\
+        Attenuator Range Switch & Front-panel SP4T Break-Before-Make (BBM) rotary switch with solder lugs (E-Switch KC14A13.001NLS or C\&K A10405RNZQ, $1,000\,\text{V}_{\text{RMS}}$ dielectric withstand) \\
+        Switch-to-PCB Interconnect & 3-wire PTFE unshielded harness (Guarded Trio) to a 5-pin right-angle PCB header (Pins 1, 3, 5 active; Pins 2, 4 grounded on PCB and de-pinned) \\
+        Overvoltage Current Limiter & Socketed Vishay NFR25 $4.7\,\text{k}\Omega$ $0.5\,\text{W}$ flameproof fusible resistor ($R_{312}, R_{313}$) on $15.24\,\text{mm}$ pitch with vertical $1.5 \times 6.0\,\text{mm}$ PCB air-gap isolation slot \\
+        Input Rail Steering Clamps & Nexperia BAV199 SOT-23 ultra-low-leakage dual series diodes ($D_{309}, D_{305}$, $I_R \le 5\,\text{pA}$, $C_d \le 1.5\,\text{pF}$) steering fault current to $\pm 15\,\text{V}$ rails \\
+        Rail Overvoltage Protection & SMAJ16A unidirectional TVS diodes ($D_{105}, D_{106}$) clamping the $\pm 15\,\text{V}$ rails against rail pumping \\
+        Active Input Buffers & Dual OPA1656 CMOS Op-Amps ($U_{302}$, $10\,\text{pA}$ bias, $2.9\,\text{nV}/\sqrt{\text{Hz}}$, $53\,\text{MHz}$) with $4.7\,\text{pF}$ C0G feedback caps ($C_{308}, C_{309}$) + spare parallel DNP pads \\
+        Difference Amplifier Stage & Texas Instruments INA134 ($U_{303}$, Pin 1 tied directly to AGND, $>90\,\text{dB}$ guaranteed CMRR) \\
+        Selectable Output Clamping & Off-signal BAV199 steering bridge ($D_{306}$) with 3-pin jumpers ($JP_{301}, JP_{302}$) selecting BAV199 ($D_{301}$, $\pm 1.4\,\text{V}_{\text{pk}}$ Solo) or 1SMB5917 $4.7\,\text{V}$ Zeners ($\pm 5.4\,\text{V}_{\text{pk}}$ M4/Scope) \\
+        Universal Output Stages & Simultaneous Balanced TRS (DRV135, $G=2$) and Unbalanced BNC ($J_{303}$, $G=1$ via $200\,\Omega$ $R_{311}$) \\
+        Input Ground Switching & Permanently eliminated; full floating differential input prevents Earth short-circuits \\
+        DC Galvanic Isolation & XP Power JCA0305D03 ($3\,\text{W}$, $5\,\text{V}$ in, $\pm 15\,\text{V}$ out, $1,500\,\text{VDC}$ isolation, Faraday shield) \\
+        Primary DC Power Crowbar & USB-C (6-pin power) with 1812 SMD PTC fuse ($1.1\,\text{A}$) + SMCJ6.0A TVS clamp \\
+        Power Switching \& Indicators & Dual-pole 5V Master switch ($SW_{102}$) + Dual-pole $\pm 15$V Main switch ($SW_{101}$) with 3-LED status display ($D_{102}, D_{103}, D_{104}$) \\
+        Chassis Ground Lug Network & Isolated analog AGND referenced to enclosure ($J_{102}$) via parallel $1\,\text{M}\Omega$ $1\,\text{W}$ bleed resistor ($R_{104}$) + $10\,\text{nF}$ $1\,\text{kV}$ RF capacitor ($C_{107}$) \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Consolidated system electrical, mechanical, and safety specifications.}
+    \label{tab:system_specs}
+\end{table}
+
+\newpage
+
+% =========================================================================
+% SECTION 1: EXECUTIVE SUMMARY & TRI-HOST ARCHITECTURE
+% =========================================================================
 \section{Executive Design Summary \& Tri-Host Architecture}
 
-This document establishes the electrical, mechanical, and PCB layout specifications for an optimized dual-channel replica of the classic Pete Millett Soundcard Interface. While originally conceived as a single-channel, through-hole audio interface accessory for consumer PC soundcards, this Revision 2.0 architecture transforms the design into a **high-precision, dual-channel, galvanically isolated active differential probe and signal conditioning front-end**.
+This document establishes the electrical, mechanical, and PCB layout specifications for an optimized dual-channel replica of the classic Pete Millett Soundcard Interface. While originally conceived as a single-channel, through-hole audio interface accessory for consumer PC soundcards, this Revision 3.1 architecture transforms the design into a \textbf{high-precision, dual-channel, galvanically isolated active differential probe and wideband signal conditioning front-end}.
 
 The system is engineered to serve three distinct instrumentation hosts interchangeably without hardware reconfiguration:
 \begin{enumerate}[label=\textbf{\arabic*.}]
-    \item \textbf{M-Audio Solo (Consumer USB Audio Interface):} Provides basic single-ended and balanced audio-band spectrum analysis, serving as an isolated, sacrificial signal source and preliminary digitizer.
-    \item \textbf{MOTU M4 (Professional 24-bit/192\,kHz Interface):} Connects via dedicated rear-panel balanced Line Inputs 3 \& 4 (+18\,dBu headroom, fixed analog gain) to perform high-resolution automated harmonic distortion (THD+N down to $-106$\,dB), intermodulation, and phase tracking using software suites such as ARTA (STEPS, LIMP), REW, and Multitone.
-    \item \textbf{Siglent SDS804X HD (12-bit High-Resolution Bench Oscilloscope):} Functions as a **$1,500\,\text{VDC}$ isolated, high-voltage active differential probe**. In High-Resolution (ERES) mode, the oscilloscope achieves 14 to 16 effective bits (ENOB) with continuous bandwidth from DC up to $>500\,\text{kHz}$, making it ideal for inspecting ultrasonic oscillation, power-supply rail ripple, slew-rate transients, and Class-D amplifier switching noise without ground-loop hazards.
+    \item \textbf{M-Audio Solo (Consumer 16-Bit USB Audio Interface):} Provides basic single-ended and balanced audio-band spectrum analysis, serving as an isolated, sacrificial signal source and digitizer ($20\,\text{Hz} - 20\,\text{kHz}$, $\approx 92\text{--}94\,\text{dB}$ dynamic range). Because the Solo line input clips near $+2\,\text{dBu}$ ($\approx 1.0\,\text{V}_{\text{RMS}}$), the interface provides a dedicated Low-Clamp jumper position ($\pm 1.4\,\text{V}_{\text{pk}}$ at the single-ended `SCPROT` node).
+    \item \textbf{MOTU M4 (Professional 24-Bit / 192\,kHz Interface):} Connects via dedicated rear-panel balanced Line Inputs 3 \& 4 (+18\,dBu headroom, fixed analog gain) to perform high-resolution automated harmonic distortion (THD+N down to $-110$\,dB), intermodulation, and phase tracking using software suites such as ARTA (STEPS, LIMP), REW, and Multitone.
+    \item \textbf{Siglent SDS804X HD (12-Bit High-Resolution Bench Oscilloscope):} Functions as a \textbf{$1,500\,\text{VDC}$ isolated, high-voltage active differential probe}. In High-Resolution (ERES) mode, the oscilloscope achieves 14 to 16 effective bits (ENOB) with continuous bandwidth from $3.35\,\text{Hz}$ past $2.0\,\text{MHz}$, making it ideal for inspecting ultrasonic oscillation, power-supply rail ripple, slew-rate transients, and Class-D amplifier switching noise without ground-loop hazards.
 \end{enumerate}
 
 \subsection{Key Design Modifications from Baseline}
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Dual-Channel Mirrored Topology:} Complete duplication of attenuators, LND150 limiters, OPA1656 buffers, INA134 difference stages, clamping bridges, and DRV135 drivers for independent stereo operation.
-    \item \textbf{Replacement of Noisy $50\,\text{k}\Omega$ Resistors:} Substituted Pete's original $49.9\,\text{k}\Omega$ resistors ($R_{16}, R_2$) with back-to-back Microchip LND150 depletion MOSFETs, lowering the front-end thermal noise floor by $\approx 14\,\text{dB}$.
+    \item \textbf{Dual-Channel Topology:} Complete mirrored duplication of attenuators, fusible limiters, OPA1656 buffers, INA134 difference stages, clamping bridges, and DRV135 drivers for stereo operation.
+    \item \textbf{Power Switching \& Kick-Back Protection:} Added a primary Master Switch ($SW_{102}$) and secondary Dual-Rail Switch ($SW_{101}$), a 3-LED status monitoring network, and dual secondary SMAJ16A TVS clamping diodes ($D_{105}, D_{106}$) across the $\pm 15\,\text{V}$ rails to absorb kickback current during high-voltage input faults.
+    \item \textbf{Chassis Ground Isolation Lug:} Integrated a dedicated chassis bonding network comprising a $1\,\text{M}\Omega$ $1\,\text{W}$ bleeder resistor in parallel with a $10\,\text{nF}$ $1\,\text{kV}$ ceramic capacitor connecting chassis earth to isolated analog ground for RF shielding and electrostatic drainage without ground loops.
+    \item \textbf{Transition to Vishay NFR25 Fusible Resistors:} Replaced both Pete's original noisy $50\,\text{k}\Omega$ resistors and intermediate depletion FET concepts with socketed $4.7\,\text{k}\Omega$ flameproof fusible resistors ($R_{312}, R_{313}$), lowering thermal noise to $8.82\,\text{nV}/\sqrt{\text{Hz}}$ while ensuring safe open-circuit disconnection under catastrophic fault conditions.
+    \item \textbf{BAV199 Low-Leakage Diodes:} Replaced legacy 1N4148 diodes with BAV199 dual series pairs ($I_R \le 5\,\text{pA}$, $C_d \le 1.5\,\text{pF}$) backed by SMAJ16A TVS power-rail clamps.
+    \item \textbf{Switch-Mounted 0.6\,W Attenuator Ladder:} Re-engineered the precision divider ladder ($90.9\,\text{k}\Omega$, $9.09\,\text{k}\Omega$, $909\,\Omega$) to solder directly across the rotary switch solder lugs in a radial halo, completely eliminating high-frequency wire-to-wire crosstalk.
+    \item \textbf{3-Wire PTFE Guarded Interconnect \& 5-Pin Header:} Replaced multi-conductor ribbon cables and lossy coaxial cables with 3 unshielded PTFE wires routed to an interleaved 5-pin header, providing $>5.08\,\text{mm}$ high-voltage creepage and grounded electrostatic shielding.
+    \item \textbf{Buffer Loop Optimization (2\,MHz):} Sized OPA1656 feedback capacitors to $4.7\,\text{pF}$ C0G/NP0 ($C_{308}, C_{309}$) with spare parallel DNP pads, pushing the loop transmission pole to $4.51\,\text{MHz}$.
     \item \textbf{Elimination of Input Ground Switch (SW5) \& Monitor Switch (SW3):} Hardwired as a permanently floating differential front-end to eliminate the risk of accidental short-circuits to Mains Earth Ground when paired with a bench oscilloscope.
-    \item \textbf{Elimination of DC Zero-Adjust Potentiometer ($R_{25}$):} Tied INA134 Pin 1 directly to local isolated analog ground (AGND). This prevents trimming resistance from unbalancing the internal laser-trimmed resistors, preserving the full $>90\,\text{dB}$ Common-Mode Rejection Ratio (CMRR).
-    \item \textbf{Dual-Level Off-Signal Zener Clamping Bridge:} Redesigned the output protection network with a 2-position switch/jumper selecting between $\pm 1.4\,\text{V}_{\text{pk}}$ (Solo protection) and $\pm 5.4\,\text{V}_{\text{pk}}$ (M4 line level / Scope dynamic range expansion) without placing capacitive Zener diodes on the audio signal path.
-    \item \textbf{Universal Output Connectivity:} Simultaneous balanced $1/4''$ TRS jacks (via DRV135) and unbalanced $50\,\Omega$ BNC jacks (via low-impedance tap from the protected node).
+    \item \textbf{Elimination of DC Zero-Adjust Potentiometer ($R_{25}$):} Tied INA134 Pin 1 directly to local isolated analog ground (AGND), preserving $>90\,\text{dB}$ CMRR.
+    \item \textbf{Dual-Level Off-Signal Zener Clamping Bridge:} Relocated voltage-defining Zeners into DC bias legs selecting between $\pm 1.4\,\text{V}_{\text{pk}}$ (Solo protection) and $\pm 5.4\,\text{V}_{\text{pk}}$ (M4 line level / Scope dynamic range) without placing non-linear Zener capacitance across the audio signal path.
+    \item \textbf{Universal Output Connectivity:} Simultaneous balanced $1/4''$ TRS jacks (via DRV135, $G=2$) and unbalanced BNC jacks (via $200\,\Omega$ isolation resistor $R_{311}$).
 \end{itemize}
 
----
+% =========================================================================
+% SECTION 2: SYSTEM ARCHITECTURE & HOST COMPARISON
+% =========================================================================
+\section{System Architecture \& Cross-Host Metrology}
 
-\section{System Architecture \& Host Comparison}
+Table~\ref{tab:host_matrix} outlines the operating modes, converter architectures, and metrology boundaries across the supported bench hosts.
 
-To understand how the interface integrates with various bench instruments, Table~\ref{tab:host_matrix} outlines the operating modes and trade-offs across the supported hosts.
-
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \small
-    \begin{tabularx}{\textwidth}{l L L L}
+    \setlength{\tabcolsep}{3.5pt}
+    \begin{tabularx}{\textwidth}{@{} l L L L @{}}
         \toprule
-        \textbf{Metric} & \textbf{M-Audio Solo} & \textbf{MOTU M4} & \textbf{Siglent SDS804X HD (Hi-Res)} \\
+        \textbf{Metric} & \textbf{M-Audio Solo} & \textbf{MOTU M4 (Ch 3/4)} & \textbf{Siglent SDS804X HD} \\
         \midrule
         \textbf{Primary Role} & Portable / Sacrificial Audio In & Reference Audio Distortion Rig & High-Voltage Floating Active Probe \\
-        \textbf{Usable Bandwidth} & $10\,\text{Hz} - 21.5\,\text{kHz}$ & $10\,\text{Hz} - 90\,\text{kHz}$ & $\mathbf{DC} - \mathbf{500\,kHz+}$ (up to 70\,MHz raw) \\
-        \textbf{Effective Bits} & 16-bit (ENOB $\approx 14.5$) & 24-bit (ENOB $\approx 19.5$) & 12-bit native; $\mathbf{14.5 - 16\text{ bits}}$ in ERES \\
-        \textbf{THD+N Noise Floor} & $-90\,\text{dB}$ ($0.003\%$) & $\mathbf{-106\,\text{dB}}$ ($0.0005\%$) & $-86\,\text{dB}$ to $-90\,\text{dB}$ ($0.003\%$) \\
-        \textbf{Interface Input} & Front $1/4''$ Line (Bal/Unbal) & Rear $1/4''$ TRS Line 3/4 (Bal) & Front BNC ($1\,\text{M}\Omega \parallel 15\,\text{pF}$) \\
-        \textbf{Ground Reference} & Floating (USB laptop isolated) & Floating (USB bus powered) & \textbf{Mains Earth Grounded} (Chassis BNC) \\
-        \textbf{Interface Output} & Unbal BNC or Bal TRS & Balanced $1/4''$ TRS (DRV135) & Unbalanced BNC Tap ($R_{28}$) \\
-        \textbf{Clamp Mode} & Low ($\pm 1.4\,\text{V}_{\text{pk}}$) & High ($\pm 5.4\,\text{V}_{\text{pk}}$) & High ($\pm 5.4\,\text{V}_{\text{pk}}$) \\
+        \textbf{Converter Type} & 16-bit $\Delta\Sigma$ Audio ADC & 24-bit ESS Sabre32 ADC & Native 12-bit Pipeline ADC \\
+        \textbf{Maximum Linear Input} & $+2\,\text{dBu}$ ($\approx 1.0\,\text{V}_{\text{RMS}}$) & $+18\,\text{dBu}$ ($6.15\,\text{V}_{\text{RMS}}$) & Full screen $\pm 40\,\text{V}$ (at $5\,\text{V}/\text{div}$) \\
+        \textbf{Hardware Dynamic Range} & $92 - 94\,\text{dB}$ & $\mathbf{115\,\text{dB}}$ (ENOB $\approx 18.8$) & $65 - 70\,\text{dB}$ (up to 15b in ERES) \\
+        \textbf{Usable Bandwidth} & $10\,\text{Hz} - 21.5\,\text{kHz}$ & $10\,\text{Hz} - 90\,\text{kHz}$ & $\mathbf{3.35\,\text{Hz} - 2.5\,\text{MHz}}$ \\
+        \textbf{Broadband Noise Floor} & $\approx 25\,\mu\text{V}_{\text{RMS}}$ & $\mathbf{\approx 10\,\mu\text{V}_{\text{RMS}}}$ & $\approx 150\,\mu\text{V}_{\text{RMS}}$ ($2\,\text{MHz}$ BW) \\
+        \textbf{FFT Noise Floor (w/ Gain)}& $\approx -110\,\text{dBFS}$ & $\mathbf{-145\text{ to } -150\,\text{dBFS}}$ & $\approx -95\,\text{dBm}$ (Math FFT) \\
+        \textbf{Interface Input Connection}& Front $1/4''$ Line (Bal/Unbal) & Rear $1/4''$ TRS Line 3/4 (Bal) & Front BNC ($1\,\text{M}\Omega \parallel 15\,\text{pF}$) \\
+        \textbf{Ground Reference} & Floating (USB laptop isolated) & Floating (USB bus powered) & \textbf{Mains Earth Grounded} (Chassis) \\
+        \textbf{Interface Output Path} & Balanced TRS (DRV135) & Balanced TRS (DRV135) & Rear BNC Tap ($R_{311} = 200\,\Omega$) \\
+        \textbf{Clamp Selector Setting} & Low ($\pm 1.4\,\text{V}_{\text{pk}}$) & High ($\pm 5.4\,\text{V}_{\text{pk}}$) & High ($\pm 5.4\,\text{V}_{\text{pk}}$) \\
         \bottomrule
     \end{tabularx}
     \caption{Hardware capability and routing matrix across target instrumentation hosts.}
@@ -148,8 +200,8 @@ To understand how the interface integrates with various bench instruments, Table
 \subsection{Why the Oscilloscope Cannot Fully Replace the Soundcard}
 While the SDS804X HD in High-Res mode achieves an effective resolution of $\approx 15$\,bits with wide bandwidth, it cannot replace a dedicated audio interface for precision distortion testing:
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Delta-Sigma Noise Shaping:} Audio converters (such as the AKM/ESS chips in the M4) oversample and push quantization noise outside the audio band, yielding an ultra-quiet floor down to $-115\,\text{dBV}$ to $-130\,\text{dBV}$.
-    \item \textbf{Wideband Johnson Noise:} The oscilloscope front-end must maintain megahertz flat bandwidth. Even when band-limited, wideband thermal noise keeps the scope's noise floor near $-88\,\text{dB}$. Op-amp or amplifier harmonics sitting at $0.0005\%$ ($-106\,\text{dB}$) disappear entirely beneath the scope's quantization floor.
+    \item \textbf{Delta-Sigma Noise Shaping:} Audio converters (such as the ESS Sabre32 in the M4) oversample and push quantization noise outside the audio band, yielding an ultra-quiet floor down to $-115\text{ to } -130\,\text{dBV}$.
+    \item \textbf{Wideband Johnson Noise:} The oscilloscope front-end must maintain megahertz flat bandwidth. Even when band-limited, wideband thermal noise keeps the scope's noise floor near $-88\,\text{dB}$. Op-amp or amplifier harmonics sitting at $0.0003\%$ ($-110\,\text{dB}$) disappear entirely beneath the scope's quantization floor.
     \item \textbf{Software Sweep Automation:} ARTA (STEPS) and REW automate multi-point stepped-sine distortion vs.\ frequency and power sweeps, automatically tracking harmonics HD2 through HD10. Oscilloscopes require manual data export and post-processing for similar audio metrics.
 \end{itemize}
 
@@ -157,59 +209,150 @@ While the SDS804X HD in High-Res mode achieves an effective resolution of $\appr
 Conversely, connecting an oscilloscope directly to an audio circuit via a standard 10X passive probe presents severe limitations:
 \begin{enumerate}[label=\textbf{\alph*.}]
     \item \textbf{The Mains Earth Short Hazard:} The outer shield of the scope's BNC jack is hardwired to Mains Earth. Clipping a probe ground lead to a floating tube cathode resistor, a bridge-tied load (BTL) amplifier output, or an inverter rail creates a dead short to earth ground, instantly destroying circuit traces or the scope probe. The interface's $1,500\,\text{VDC}$ galvanic isolation completely eliminates this hazard.
-    \item \textbf{High DC Bias Dynamic Range Loss:} Probing a $300\,\text{VDC}$ vacuum tube plate carrying a $100\,\text{mVAC}$ signal forces a standard scope to a $50\,\text{V}/\text{div}$ or $100\,\text{V}/\text{div}$ scale. The $100\,\text{mV}$ audio ripple occupies a fraction of a single ADC quantization level. The interface's $400\,\text{V}$ polypropylene film capacitors block the DC component completely, allowing the scope to operate on its most sensitive $20\,\text{mV}/\text{div}$ or $50\,\text{mV}/\text{div}$ scale.
+    \item \textbf{High DC Bias Dynamic Range Loss:} Probing a $300\,\text{VDC}$ vacuum tube plate carrying a $100\,\text{mVAC}$ signal forces a standard scope to a $50\,\text{V}/\text{div}$ or $100\,\text{V}/\text{div}$ scale. The $100\,\text{mV}$ audio ripple occupies a fraction of a single ADC quantization level. The interface's $400\,\text{V}$ polypropylene film capacitors block the DC component completely, allowing the scope to operate on its most sensitive $20\,\text{mV}/\text{div}$ scale.
     \item \textbf{Capacitive Loading on High-Z Nodes:} A 10X passive probe has $\approx 15\,\text{pF}$ of tip capacitance, which at $20\,\text{kHz}$ represents an impedance of only $530\,\text{k}\Omega$. On a high-impedance tube plate ($100\,\text{k}\Omega$), this causes high-frequency roll-off and phase shift. The interface's OPA1656 CMOS inputs buffer the node with negligible capacitance and $10^{13}\,\Omega$ input resistance.
 \end{enumerate}
 
----
-
-\section{DC Power Supply \& Primary Crowbar Architecture}
-
-The power delivery network converts an unregulated $+5\,\text{VDC}$ supply into low-noise, fully isolated $\pm 15\,\text{VDC}$ analog split rails. Because the interface is powered via standard external USB power adapters or host PC ports, robust primary-side protection is mandatory to safeguard against overvoltage transients and polarity reversals.
-
-\subsection{Power Input Connector (USB-C 6-Pin)}
-Legacy full-sized USB-B and coaxial barrel jacks are deprecated in favor of a modern 6-pin USB-C receptacle (Power Only).
+\subsection{Comparison with DC Telemetry Front-End (TI INA228)}
+A dedicated DC telemetry circuit based on the Texas Instruments INA228 serves a fundamentally different measurement role than this wideband AC-coupled analog front-end:
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Connector Pinout:} Provides two $V_{\text{BUS}}$ pins, two Ground pins, and two Configuration Channel (CC1/CC2) pins.
-    \item \textbf{CC Logic Configuration:} To ensure universal enumeration with standard USB Type-C to Type-C smart power supplies (E-marked cables), CC1 and CC2 must each be terminated to ground through an independent $5.1\text{ k}\Omega \pm 1\%$ pulldown resistor.
-    \item \textbf{Solderability:} The 6-pin layout provides wide ($> 0.8\text{ mm}$) pad spacing, permitting rapid, high-yield hand soldering compared to 24-pin high-speed data receptacles.
+    \item \textbf{Signal Domain:} The INA228 is an integrated 20-bit $\Delta\Sigma$ digital power/energy monitor strictly dedicated to DC bus voltage, shunt current, and slow thermal telemetry. This interface is an ultra-low-distortion, dynamic AC front-end with analog bandwidth extending to $2.5\,\text{MHz}$.
+    \item \textbf{Common-Mode Ceiling:} The INA228 is restricted to an absolute maximum common-mode bus voltage of $+85\,\text{VDC}$. This AFE withstands continuous $150\,\text{V}_{\text{RMS}}$ ($212\,\text{V}_{\text{pk}}$) and intermittent $250\,\text{V}_{\text{RMS}}$ ($353\,\text{V}_{\text{pk}}$), with a dielectric isolation barrier of $1,500\,\text{VDC}$ between device-under-test and the host chassis.
+    \item \textbf{Throughput \& Interface:} The INA228 digitizes internally and outputs over an $\text{I}^2\text{C}$ digital bus at conversion rates up to $50\,\text{kSPS}$. This interface provides real-time, zero-latency continuous analog waveforms to audio analyzers and high-speed bench oscilloscopes.
 \end{itemize}
 
-\subsection{Active Crowbar Protection Subsystem}
-To prevent catastrophic failure should the user connect an off-spec power source (e.g., $9\text{V}$, $12\text{V}$, or $19\text{V}$ laptop chargers), an explicit two-stage crowbar protection circuit is positioned upstream of all active regulators.
+% =========================================================================
+% SECTION 3: DC POWER SUPPLY & PRIMARY CROWBAR
+% =========================================================================
+\section{DC Power Supply, Rail Clamping \& Enclosure Grounding}
+
+The power delivery network converts an unregulated $+5\,\text{VDC}$ supply into low-noise, fully isolated $\pm 15\,\text{VDC}$ analog split rails. The schematic architecture integrates dual-stage power switching, multi-LED status reporting, TVS rail protection against clamping kickback, and an AC-coupled chassis ground lug.
+
+\subsection{Power Input Connector \& Dual-Pole Master Switch \texorpdfstring{($SW_{102}$)}{(SW102)}}
+Power enters via a dedicated 6-pin USB-C receptacle (Power Only, J101):
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Connector Pinout \& CC Logic:} Provides two $V_{\text{BUS}}$ power pins, two Ground pins, and dual Configuration Channel (CC1/CC2) pins, each terminated to ground through an independent $5.1\,\text{k}\Omega \pm 1\%$ pulldown resistor.
+    \item \textbf{Master Power Switch ($SW_{102}$):} A DPST toggle switch ($SW_{102\text{A}}, SW_{102\text{B}}$) placed immediately at the USB-C power entry point. This completely disconnects both the $+5\,\text{V}_{\text{in}}$ supply rail and the primary ground reference (\texttt{GNDREF}) when open, preventing quiescent drain and USB host back-powering.
+\end{itemize}
+
+\subsection{Active Primary Crowbar Protection \texorpdfstring{($F_{101}, D_{101}$)}{(F101, D101)}}
+Upstream of the DC-DC converter, an explicit crowbar stage guards against overvoltage transients from off-spec USB adapters:
 \begin{enumerate}[label=\textbf{\alph*.}]
-    \item \textbf{Series Overcurrent Limiter (F1):} Upgraded from the legacy radial leaded RUSBF110 to an 1812 surface-mount resettable PTC fuse ($I_{\text{hold}} = 1.1\text{ A}$, $I_{\text{trip}} = 2.2\text{ A}$, $V_{\text{max}} \ge 16\text{ V}$). The 1812 package provides low internal resistance ($< 0.1\,\Omega$) and planar thermal dissipation.
-    \item \textbf{Shunt Clamping Diode (D9):} Replaces the axial 1.5KE9.1A with an SMD DO-214AB (SMC) Transient Voltage Suppressor (TVS), specifically the \textbf{SMCJ6.0A} (or SMCJ6.5A).
-    \begin{itemize}
-        \item Reverse Standoff Voltage ($V_{\text{RWM}}$): $6.0\,\text{V}$.
-        \item Breakdown Voltage ($V_{\text{BR}}$): $6.67\,\text{V}$ to $7.37\,\text{V}$.
-        \item Peak Pulse Power Dissipation: $1500\,\text{W}$.
-    \end{itemize}
-    \textit{Engineering Justification:} The original $9.1\text{V}$ breakdown diode allows dangerous voltage excursions before conduction, stressing the DC-DC input stage. A $6.0\text{V}$ standoff diode clamps immediately above nominal $5\text{V}$, driving F1 into high-impedance latch-off within milliseconds.
+    \item \textbf{Series Overcurrent Limiter ($F_{101}$):} An 1812 surface-mount resettable PTC fuse (\textbf{Bourns MF-MSMF110}, $I_{\text{hold}} = 1.1\,\text{A}$, $I_{\text{trip}} = 2.2\,\text{A}$, $V_{\text{max}} \ge 16\,\text{V}$). The 1812 footprint provides low internal resistance ($< 0.1\,\Omega$) and high heat dissipation.
+    \item \textbf{Shunt Clamping Diode ($D_{101}$):} An SMD DO-214AB (SMC) Transient Voltage Suppressor, specifically the \textbf{SMCJ6.0A} ($V_{\text{RWM}} = 6.0\,\text{V}$, $V_{\text{BR}} = 6.67\,\text{V}$ to $7.37\,\text{V}$, $1500\,\text{W}$ peak pulse power). A $6.0\,\text{V}$ standoff diode clamps immediately above nominal $5\,\text{V}$, driving $F_{101}$ into high-impedance latch-off within milliseconds.
 \end{enumerate}
 
-\subsection{Isolated DC-DC Converter (XP Power JCA0305D03)}
+\subsection{Isolated DC-DC Converter \texorpdfstring{($U_{101}$)}{(U101)} \& Analog Rail Switch \texorpdfstring{($SW_{101}$)}{(SW101)}}
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Key Characteristics:} $3\text{ W}$ continuous rating, nominal $+5\,\text{VDC}$ input ($4.5\,\text{V}$ to $9.0\,\text{V}$ operating window), fully regulated $\pm 15\,\text{VDC}$ dual output at $\pm 100\text{ mA}$.
+    \item \textbf{XP Power JCA0305D03 ($U_{101}$):} $3\,\text{W}$ continuous rating, nominal $+5\,\text{VDC}$ input ($4.5\,\text{V}$ to $9.0\,\text{V}$ operating window), fully regulated $\pm 15\,\text{VDC}$ dual output at $\pm 100\,\text{mA}$.
     \item \textbf{Galvanic Isolation:} $1,500\,\text{VDC}$ baseline isolation breaks ground continuity between the computer sound card and floating device-under-test (DUT) circuits.
-    \item \textbf{EMI/RFI Containment:} Housed in an integrated nickel-coated copper metal enclosure. The conductive shell acts as an intrinsic Faraday cage, trapping high-frequency magnetic and electric fields.
-    \item \textbf{Switching Profile:} Fixed switching frequency at $300\text{ kHz}$. Because $300\text{ kHz}$ sits over an order of magnitude above the audible audio spectrum ($20\text{ Hz}$--$20\text{ kHz}$) and its sampling limits ($192\text{ kHz}$ A/D Nyquist at $96\text{ kHz}$), switching intermodulation artifacts are readily rejected.
+    \item \textbf{EMI/RFI Containment:} Housed in an integrated nickel-coated copper metal enclosure acting as an intrinsic Faraday shield.
+    \item \textbf{Secondary Rail Filtering ($C_{103}$--$C_{106}$):} The isolated $+15\,\text{V}$ and $-15\,\text{V}$ outputs are filtered by $330\,\mu\text{F}$ $25\,\text{V}$ low-ESR radial electrolytics ($C_{103}, C_{104}$) and local $0.1\,\mu\text{F}$ X7R ceramic bypass caps ($C_{105}, C_{106}$).
+    \item \textbf{Main Power Switch ($SW_{101}$):} A DPDT switch ($SW_{101\text{A}}, SW_{101\text{B}}$) isolates downstream analog circuitry (\texttt{+VDC}, \texttt{-VDC}) from the DC-DC output, allowing commissioning and power-rail verification without powering active ICs.
 \end{itemize}
 
-\subsection{Bulk Storage and High-Frequency Filtering Network}
-The legacy design specified $35\text{V}$-rated radial electrolytic capacitors indiscriminately across both the $5\text{V}$ and $15\text{V}$ domains, consuming excessive board area. The revised component sizing is structured as follows:
+\subsection{3-LED Diagnostic Monitoring Subsystem}
+Three dedicated status LEDs provide instantaneous visual verification of system power integrity:
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Master Power LED ($D_{102}$, \texttt{M\_PWR}):} Positioned on the primary $5\,\text{V}$ side after $SW_{102}$, powered via series resistor $R_{101}$ ($470\,\Omega$):
+    \begin{equation}
+        I_{\text{LED,pri}} = \frac{5.0\,\text{V} - 2.0\,\text{V}}{470\,\Omega} \approx \mathbf{6.38\,\text{mA}}
+    \end{equation}
+    Indicates that USB-C power is valid and the master switch is closed.
+    \item \textbf{Positive Analog Rail LED ($D_{103}$, \texttt{PWR\_PS}):} Connected between the switched $+15\,\text{VDC}$ rail and isolated analog ground via $R_{102}$ ($3.0\,\text{k}\Omega$):
+    \begin{equation}
+        I_{\text{LED,pos}} = \frac{15.0\,\text{V} - 2.0\,\text{V}}{3{,}000\,\Omega} \approx \mathbf{4.33\,\text{mA}}
+    \end{equation}
+    \item \textbf{Negative Analog Rail LED ($D_{104}$, \texttt{PWR\_NEG}):} Connected between isolated analog ground and the $-15\,\text{VDC}$ rail via $R_{103}$ ($3.0\,\text{k}\Omega$), sinking $\approx 4.33\,\text{mA}$.
+\end{enumerate}
+
+\subsection{Secondary TVS Rail Clamping Kickback Protection \texorpdfstring{($D_{105}, D_{106}$)}{(D105, D106)}}
+During an extreme high-voltage input fault (e.g., $250\,\text{V}_{\text{RMS}}$ intermittent), fault current shunted through the BAV199 input protection diodes flows directly into the $+15\,\text{V}$ and $-15\,\text{V}$ analog power rails. 
+
+\textbf{The Rail Pump-Up Hazard:} The XP Power JCA0305D03 is a unidirectional boost-buck flyback converter; its synchronous output rectifiers can only \textit{source} current into the load. They cannot sink reverse current back into the transformer. Injected fault current ($\approx 72\,\text{mA}_{\text{pk}}$) charges filter capacitors $C_{103}$ and $C_{104}$, causing the supply rails to rapidly pump upward above $\pm 20\,\text{V}$, destroying the OPA1656 and INA134 op-amps (absolute maximum rating $\pm 18.0\,\text{V}$).
+
+\textbf{The Solution:} Two \textbf{Littelfuse SMAJ16A} surface-mount TVS diodes ($D_{105}, D_{106}$) clamp the rails:
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Input Bulk Decoupling (C22):} Downrated from $35\text{V}$ to $10\text{V}$ or $16\text{V}$ ($330\,\mu\text{F}$, low-ESR radial or aluminum SMD). Dimensions reduce from a diameter of $10\text{ mm}$ to $6.3\text{ mm}$.
-    \item \textbf{High-Frequency Input Snubber:} An 0805 $0.1\,\mu\text{F}$ X7R ceramic capacitor is routed directly across pins 22/23 ($V_{\text{IN}+}$) and pins 2/3 ($V_{\text{IN}-}$) of the JCA module. Electrolytic bulk capacitors exhibit significant inductive reactance at $300\text{ kHz}$; the local ceramic shunt captures inductive current spikes before they radiate across the input plane.
-    \item \textbf{Output Rail Filtering (C7, C8, C13, C18):} Downrated from $35\text{V}$ to $25\text{V}$ ($330\,\mu\text{F}$ low-ESR). Sized for reliable headroom above the continuous $\pm 15\,\text{VDC}$ rail potential while minimizing footprint height.
+    \item \textbf{Positive Rail Clamp ($D_{105}$):} Cathode tied to $+15\,\text{VDC}$, anode tied to isolated GND. Reverse standoff voltage $V_{\text{RWM}} = 16.0\,\text{V}$; breakdown $V_{\text{BR}} = 17.8\,\text{V}$ to $19.7\,\text{V}$.
+    \item \textbf{Negative Rail Clamp ($D_{106}$):} Cathode tied to isolated GND, anode tied to $-15\,\text{VDC}$.
+    \item \textbf{Operation:} Under normal conditions ($|\pm 15.0\,\text{V}|$), both diodes remain non-conducting with leakage current $< 1\,\mu\text{A}$. During an overvoltage fault, if either rail attempts to rise above $16.5\,\text{V}$, the respective TVS turns on, shunting fault current into ground and clamping the rail below $18.0\,\text{V}$.
 \end{itemize}
+
+\subsection{Chassis Ground Isolation Lug Network \texorpdfstring{($J_{102}, R_{104}, C_{107}$)}{(J102, R104, C107)}}
+To ensure low electromagnetic interference while maintaining complete floating differential safety, an isolated chassis bonding network is provided:
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Chassis Lug Terminal ($J_{102}$, \texttt{J\_chassis}):} Connects mechanically to the extruded aluminum enclosure.
+    \item \textbf{High-Voltage Bleeder Resistor ($R_{104}$):} A $1\,\text{M}\Omega \pm 5\%$ $1\,\text{W}$ flameproof metal-film resistor shunts electrostatic charge accumulation between the isolated secondary analog ground (AGND) and the metal enclosure.
+    \item \textbf{RF Shunt Capacitor ($C_{107}$):} A $10\,\text{nF}$ ($0.01\,\mu\text{F}$) $1\,\text{kV}$ ceramic safety capacitor in parallel with $R_{104}$ provides a low-impedance AC return path ($X_C \approx 16\,\Omega$ at $1\,\text{MHz}$) for stray RF pickup and switching EMI.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.88, transform shape, font=\footnotesize]
+    % Primary Block
+    \draw[thick, fill=lightgray!30, rounded corners=3pt] (-0.3,-0.5) rectangle (4.6, 5.0);
+    \node[anchor=north west, font=\bfseries] at (-0.1, 4.8) {Primary 5V \& Crowbar};
+    
+    \node[draw, thick, fill=white] (J101) at (0.6, 3.8) {$J_{101}$ 5V In};
+    \node[draw, thick, fill=white] (SW102) at (2.2, 3.8) {$SW_{102}$ M-SW};
+    \node[draw, thick, fill=white] (F101) at (3.8, 3.8) {$F_{101}$ PTC};
+    \draw[thick, ->] (J101) -- (SW102);
+    \draw[thick, ->] (SW102) -- (F101);
+
+    \draw[thick] (3.8, 3.4) -- (3.8, 1.8);
+    \node[draw, thick, fill=white] (D101) at (3.8, 2.6) {$D_{101}$ SMCJ6.0A};
+    \node[draw, thick, fill=white] (C101) at (2.3, 2.6) {$C_{101}\ 330\mu$};
+    \node[draw, thick, fill=white] (D102) at (0.8, 2.6) {$D_{102}$ M-LED};
+    \draw[thick] (3.8, 3.0) -| (C101);
+    \draw[thick] (3.8, 3.0) -| (D102);
+    \draw[thick] (0.8, 0.4) -- (3.8, 0.4) node[right=4pt] {GNDREF};
+
+    % Isolated DC-DC Block
+    \draw[thick, fill=accentblue!10, rounded corners=4pt] (5.4, 1.0) rectangle (9.2, 4.4);
+    \node[align=center, font=\bfseries] at (7.3, 3.2) {XP Power JCA0305D03\\$U_{101}$ ($3\text{W}$, $1.5\text{kV}$ Isol)};
+    \draw[thick, ->] (4.2, 3.8) -- (5.4, 3.8) node[midway, above] {$+5\text{V}$};
+    \draw[thick, ->] (4.2, 1.6) -- (5.4, 1.6) node[midway, below] {GNDREF};
+
+    % Secondary Block
+    \draw[thick, fill=lightgray!30, rounded corners=3pt] (10.0,-0.5) rectangle (16.2, 5.0);
+    \node[anchor=north west, font=\bfseries] at (10.2, 4.8) {Secondary $\pm 15$V Rails \& Protection};
+
+    \node[draw, thick, fill=white] (SW101) at (11.4, 3.8) {$SW_{101}$ Main};
+    \draw[thick, ->] (9.2, 3.8) -- (SW101) node[midway, above] {$+15\text{V}$};
+    \draw[thick, ->] (9.2, 1.6) -- (11.4, 1.6) node[midway, below] {$-15\text{V}$};
+
+    \node[draw, thick, fill=white] (TPPOS) at (13.6, 3.8) {\texttt{+VDC}};
+    \node[draw, thick, fill=white] (TPNEG) at (13.6, 1.6) {\texttt{-VDC}};
+    \draw[thick, ->] (SW101) -- (TPPOS);
+    \draw[thick, ->] (11.4, 1.6) -- (TPNEG);
+
+    % TVS Clamps & LEDs
+    \node[draw, thick, fill=white] (D105) at (15.2, 3.8) {$D_{105}$ SMAJ16A};
+    \node[draw, thick, fill=white] (D103) at (13.6, 2.7) {$D_{103}$ +15V LED};
+    \node[draw, thick, fill=white] (D104) at (13.6, 0.5) {$D_{104}$ -15V LED};
+    \node[draw, thick, fill=white] (D106) at (15.2, 1.6) {$D_{106}$ SMAJ16A};
+
+    \draw[thick] (TPPOS) -- (D105);
+    \draw[thick] (TPNEG) -- (D106);
+    \draw[thick] (TPPOS) -- (D103);
+    \draw[thick] (TPNEG) -- (D104);
+
+    % Chassis Lug Box
+    \draw[thick, dashed, fill=white] (4.8, -1.8) rectangle (11.4, -0.7);
+    \node[font=\bfseries] at (8.1, -1.0) {Chassis Star Lug ($J_{102}$)};
+    \node[font=\scriptsize] at (8.1, -1.45) {$R_{104}\ (1\text{M}\Omega\ 1\text{W})\ \parallel\ C_{107}\ (10\text{nF}\ 1\text{kV})$ to AGND};
+\end{tikzpicture}
+\caption{Complete power delivery architecture incorporating $SW_{102}$, $SW_{101}$, triple-LED telemetry, SMAJ16A kick-back clamps, and $J_{102}$ chassis lug network.}
+\label{fig:power_schematic}
+\end{figure}
 
 \subsection{Power Budget for Dual-Channel Architecture}
-Table~\ref{tab:power_budget} verifies that current demands for both channels remain well within continuous operating ratings of the single JCA0305D03 converter.
+Table~\ref{tab:power_budget} verifies that current demands across both channels, all three status LEDs, and clamp bias circuits remain comfortably below the $100\,\text{mA}$ converter ceiling.
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \small
+    \setlength{\tabcolsep}{4pt}
     \begin{tabularx}{\linewidth}{@{} l c c L @{}}
         \toprule
         \textbf{Circuit Block} & \textbf{Qty} & \textbf{Current ($\pm 15$\,V)} & \textbf{Operating Condition / Notes} \\
@@ -217,89 +360,251 @@ Table~\ref{tab:power_budget} verifies that current demands for both channels rem
         OPA1656IDR (Dual Op-Amp) & 2 ICs & $14.0\,\text{mA}$ total & High-Z input buffers (Ch 1 \& Ch 2) \\
         INA134UA (Diff Amp) & 2 ICs & $4.8\,\text{mA}$ total & Difference amplifiers (Ch 1 \& Ch 2) \\
         DRV135UA (Line Driver) & 2 ICs & $10.4\,\text{mA}$ total & Quiescent line driving current \\
-        Zener Bias Networks ($R_{29}, R_{30}$) & 4 legs & $20.6\,\text{mA}$ total & Bias current in High-Clamp mode \\
+        Zener Bias Networks ($R_{301}, R_{307}$) & 4 legs & $20.6\,\text{mA}$ total & Bias current in High-Clamp mode ($10.3\,\text{mA}$ per channel) \\
+        Rail Status LEDs ($D_{103}, D_{104}$) & 2 LEDs & $8.7\,\text{mA}$ total & Continuous visual indicator draw ($4.33\,\text{mA}$ per rail) \\
         \midrule
-        \textbf{Total Quiescent Draw} & --- & $\mathbf{49.8\,\text{mA}}$ & \textbf{$49.8\%$ of $100\,\text{mA}$ converter rating} \\
+        \textbf{Total Quiescent Draw} & --- & $\mathbf{58.5\,\text{mA}}$ & \textbf{$58.5\%$ of $100\,\text{mA}$ converter rating} \\
         \bottomrule
     \end{tabularx}
     \caption{Power consumption budget across dual-channel active components.}
     \label{tab:power_budget}
 \end{table}
 
----
+% =========================================================================
+% SECTION 4: ANALOG FRONT-END & PROTECTION
+% =========================================================================
+\section{Analog Front-End (AFE) Signal Conditioning \& Protection}
 
-\section{Analog Front-End (AFE) Signal Conditioning}
-
-The input stage accepts single-ended or balanced voltages ranging from line-level audio ($< 1\,\text{V}_{\text{RMS}}$) up to high-voltage tube amplifier plate swings ($> 100\,\text{V}_{\text{RMS}}$).
-
-\subsection{High-Voltage DC Blocking Capacitors (C2, C3, C20, C21)}
-DC blocking capacitors isolate the sensitive solid-state buffer from the high DC anode potentials encountered in vacuum tube circuits.
+\subsection{High-Voltage DC Blocking Capacitors (C302, C303, C402, C403)}
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Capacitance Optimization:} Pete Millett originally specified $1.0\,\mu\text{F}$ $400\text{V}$ polyester dielectric blocks to extend sub-audible measurement performance down to $1.5\text{ Hz}$. For standard audio analysis ($20\text{ Hz}$--$20\text{ kHz}$), the input coupling values are downsized to $0.47\,\mu\text{F}$ ($400\text{VDC}$ working rating).
-    \item \textbf{Cut-off Calculation:} Across the $100\text{ k}\Omega$ system input impedance, the high-pass $-3\text{ dB}$ corner frequency is given by:
+    \item \textbf{Capacitance Optimization:} Sized at $0.47\,\mu\text{F}$ with a $400\,\text{VDC}$ working rating.
+    \item \textbf{Cut-off Calculation:} Across the $101.0\,\text{k}\Omega$ system input impedance, the high-pass $-3\,\text{dB}$ corner frequency is:
     \begin{equation}
-        f_c = \frac{1}{2 \pi R C} = \frac{1}{2 \pi \times 10^5 \times (0.47 \times 10^{-6})} \approx 3.38\,\text{Hz}
+        f_c = \frac{1}{2 \pi R C} = \frac{1}{2 \pi \times 101{,}000 \times (0.47 \times 10^{-6})} \approx 3.35\,\text{Hz}
     \end{equation}
-    At $20\text{ Hz}$, the magnitude attenuation is below $0.06\text{ dB}$, and phase shift is negligible.
-    \item \textbf{Dielectric Selection:} Metallized Polypropylene (PP) Film (e.g., WIMA MKP4 or Panasonic ECQ-E). High-voltage Class II SMD ceramic capacitors (X7R, X5R) are strictly prohibited due to severe Voltage Coefficient of Capacitance (VCC) non-linearities, which inject harmonic distortion under high-voltage AC swings.
-    \item \textbf{CAD Footprint Provisioning:} The PCB layout incorporates multi-pitch radial through-hole pads with concentric drill points spaced at $5.0\text{ mm}$, $7.5\text{ mm}$, $10.0\text{ mm}$, and $15.0\text{ mm}$, ensuring compatibility with various film capacitor form factors.
+    At $20\,\text{Hz}$, the magnitude attenuation is below $0.06\,\text{dB}$, and phase shift is negligible.
+    \item \textbf{Dielectric Selection:} Metallized Polypropylene (PP) Film (e.g., WIMA MKP4 or Panasonic ECQ-E). High-voltage Class II SMD ceramic capacitors (X7R) are strictly prohibited due to severe Voltage Coefficient of Capacitance (VCC) non-linearities.
+    \item \textbf{CAD Footprint Provisioning:} Multi-pitch radial through-hole pads with concentric drill points spaced at $5.0\,\text{mm}$, $7.5\,\text{mm}$, $10.0\,\text{mm}$, and $15.0\,\text{mm}$.
 \end{itemize}
 
-\subsection{Active Protection Clamping \& Low-Noise Current Limiting}
-When an overvoltage transient enters the front-end, high currents must be prevented from damaging the op-amp input stages.
+\subsection{Active Protection Limiting: The \texorpdfstring{$4.7\,\text{k}\Omega$}{4.7 k-ohm} Fusible Resistor}
+Earlier design revisions considered back-to-back Microchip LND150 depletion MOSFETs to provide current limiting. While attractive for low-frequency current pinching, the LND150 introduces severe limitations in a wideband active probe:
+\begin{enumerate}[label=\textbf{\alph*.}]
+    \item \textbf{Non-Linear Junction Capacitance:} The LND150 exhibits an input capacitance ($C_{\text{iss}}$) of $15\text{ to }30\,\text{pF}$ that varies significantly with instantaneous terminal voltage. Across a $100\,\text{k}\Omega$ divider impedance, this voltage-dependent capacitance produces harmonic distortion and limits bandwidth below $500\,\text{kHz}$.
+    \item \textbf{Channel Resistance Modulation:} As signal swings exceed several volts, the drain-to-source channel dynamic resistance modulates prior to pinch-off, increasing measured distortion by over $18\,\text{dB}$ at $10\,\text{kHz}$.
+\end{enumerate}
 
-\subsubsection{Thermal Noise Analysis \& LND150 Substitution}
-In Pete Millett's original design, $49.9\,\text{k}\Omega$ resistors ($R_2, R_{16}$) were placed in series with the input buffer to limit fault current into the protection diodes during overvoltage events. 
+\textbf{The Fusible Resistor Solution ($R_{312}, R_{313}$):} The LND150 pair is replaced with a single socketed \textbf{Vishay NFR25 $4.7\,\text{k}\Omega$ flameproof fusible resistor}.
 
-The Johnson-Nyquist thermal noise generated by a resistor is:
+\subsubsection{Johnson Thermal Noise Analysis}
+The thermal noise density generated by a resistor is given by:
 \begin{equation}
-    v_n = \sqrt{4 k_B T R \Delta f}
+    e_n = \sqrt{4 k_B T R}
 \end{equation}
-At room temperature ($T = 300\,\text{K}$), the noise spectral density of the legacy $49.9\,\text{k}\Omega$ resistor is:
+At $T = 300\,\text{K}$ with $R = 4.7\,\text{k}\Omega$:
 \begin{equation}
-    e_{n(\text{passive})} = \sqrt{4 \times (1.38 \times 10^{-23}) \times 300 \times 49{,}900} \approx 28.7\,\text{nV}/\sqrt{\text{Hz}}
+    e_{n(4.7\text{k})} = \sqrt{4 \times (1.38 \times 10^{-23}) \times 300 \times 4{,}700} \approx \mathbf{8.82\,\text{nV}/\sqrt{\text{Hz}}}
 \end{equation}
-Because the modern OPA1656 operational amplifier exhibits an ultra-low input noise density of only $2.9\,\text{nV}/\sqrt{\text{Hz}}$, Pete's $50\,\text{k}\Omega$ resistors degraded the front-end noise floor by nearly an order of magnitude.
+Root-sum-squaring this value with the OPA1656 input voltage noise ($2.9\,\text{nV}/\sqrt{\text{Hz}}$):
+\begin{equation}
+    e_{n(\text{total})} = \sqrt{8.82^2 + 2.9^2} \approx \mathbf{9.28\,\text{nV}/\sqrt{\text{Hz}}}
+\end{equation}
+In a standard $20\,\text{kHz}$ audio bandwidth, the total integrated input noise is:
+\begin{equation}
+    V_{n,\text{audio}} = 9.28\,\text{nV}/\sqrt{\text{Hz}} \times \sqrt{20{,}000} \approx 1.31\,\mu\text{V}_{\text{RMS}}
+\end{equation}
+Referred to a nominal $2.0\,\text{V}_{\text{RMS}}$ line level, this maintains an input signal-to-noise ratio of \textbf{$123.6\,\text{dB}$}, preserving the full dynamic range of the MOTU M4 ADC.
 
-\textbf{The LND150 Solution:} A back-to-back pair of Microchip LND150 depletion-mode N-channel MOSFETs (500\,V breakdown rating) replaces each $50\,\text{k}\Omega$ resistor:
+\subsubsection{Overvoltage Fault Current \& Air-Gap PCB Isolation}
+During a maximum intermittent $250\,\text{V}_{\text{RMS}}$ ($353\,\text{V}_{\text{pk}}$) fault, the peak current shunted into the rail diodes is:
+\begin{equation}
+    I_{\text{fault,pk}} = \frac{353\,\text{V} - 15.6\,\text{V}}{4{,}700\,\Omega} \approx \mathbf{71.8\,\text{mA}}
+\end{equation}
+The continuous RMS fault dissipation is:
+\begin{equation}
+    P_{\text{fault}} = \frac{(250\,\text{V})^2}{4{,}700\,\Omega} \approx \mathbf{13.3\,\text{W}}
+\end{equation}
+Under this sustained overload, the Vishay NFR25 fuses cleanly within 2 seconds without flame, explosive fragmentation, or carbon tracking. 
+
+\textbf{PCB Creepage Slot:} To prevent high-voltage arcing across carbonized FR-4 substrate during a fusing event, a \textbf{$1.5\,\text{mm} \times 6.0\,\text{mm}$ isolation slot} is routed through the PCB (\textsf{Edge.Cuts}) directly beneath the body of $R_{312}$ and $R_{313}$. Sockets are implemented using Mill-Max gold-plated receptacle pins to allow rapid replacement after a fault.
+
+\subsection{Diode Selection: Upgrade from 1N4148 to BAV199}
+Pete Millett's original design specified standard 1N4148 diodes for rail clamping. These are replaced with \textbf{Nexperia BAV199} dual diodes in SOT-23 packages:
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Connection Topology:} The two MOSFETs are wired Source-to-Source. Both Gates are tied directly to the common Source node ($V_{GS} = 0\,\text{V}$).
-    \item \textbf{Normal Audio Signal Conduction:} Under normal operating swings ($|V| < \pm 15\,\text{V}$), both transistors remain fully on with zero gate-source bias. The combined channel resistance ($R_{\text{DS(on)}}$) is only $\approx 1.5\,\text{k}\Omega$ to $2.0\,\text{k}\Omega$ total.
-    \item \textbf{Thermal Noise Reduction:} The noise density drops from $28.7\,\text{nV}/\sqrt{\text{Hz}}$ to:
-    \begin{equation}
-        e_{n(\text{active})} \approx \sqrt{4 \times (1.38 \times 10^{-23}) \times 300 \times 2{,}000} \approx 5.75\,\text{nV}/\sqrt{\text{Hz}}
-    \end{equation}
-    This achieves a \textbf{$14\,\text{dB}$ improvement in input SNR}.
-    \item \textbf{Overvoltage Pinch-Off Action:} When a fault voltage exceeding $\pm 15\,\text{V}$ strikes the input, the fault current flows through the forward-biased body diode of the upstream FET into the channel of the downstream FET. The voltage drop across the channel reverse-biases the Gate-Source junction ($V_{\text{GS}} \le V_{\text{GS(off)}} \approx -1.8\,\text{V}$), pitching off the channel and clamping the maximum current to a safe $1.5\,\text{mA}$ to $3.0\,\text{mA}$ even under continuous $500\,\text{VDC}$ fault conditions.
-    \item \textbf{Input Rail Clamps:} Silicon high-speed switching diodes (\textbf{1N4148W}, SOD-123) shunt the limited $2\,\text{mA}$ current into the $\pm 15\,\text{V}$ rails. The 1N4148W maintains a junction capacitance under $2\text{ pF}$, preventing capacitive high-frequency roll-off.
+    \item \textbf{Reverse Leakage Current ($I_R$):} A standard 1N4148 leaks $25\text{ to }50\,\text{nA}$ at room temperature, increasing to $>5\,\mu\text{A}$ at $75^\circ\text{C}$. When flowing through a high-impedance divider node, this leakage creates significant non-linear DC offsets and measurable odd-order harmonic distortion. The BAV199 guarantees a maximum leakage of \textbf{$5\,\text{pA}$ at $25^\circ\text{C}$} ($<5\,\text{nA}$ at $150^\circ\text{C}$), completely eliminating leakage-induced distortion.
+    \item \textbf{Junction Capacitance ($C_j$):} The BAV199 maintains $C_j \le 1.5\,\text{pF}$ under reverse bias, preserving phase margin and high-frequency linearity out to $2.5\,\text{MHz}$.
 \end{itemize}
 
 \subsection{Why the Input Attenuator Ladder Must Be Retained}
-It is tempting to consider bypassing the input resistor divider ($R_4 - R_7$) when using an oscilloscope host, since scopes have their own internal attenuators. \textbf{This is fundamentally prohibited.}
+It is tempting to consider bypassing the input resistor divider when using an oscilloscope host, since bench scopes feature their own internal vertical attenuators. This is fundamentally prohibited:
 \begin{itemize}[leftmargin=1.5em]
-    \item The active OPA1656 input buffers operate on $\pm 15\,\text{V}$ power rails, giving them a maximum linear input voltage swing of $\approx \pm 13.5\,\text{V}_{\text{peak}}$ ($9.5\,\text{V}_{\text{RMS}}$).
-    \item Probing a vacuum tube amplifier plate ($150\,\text{V}$ to $350\,\text{V}$) without attenuation would drive the OPA1656 far past its rails, forcing the 1N4148W clamping diodes to conduct continuously. The waveform delivered to the scope would be clipped into a distorted square wave at $\pm 15.6\,\text{V}$.
-    \item The precision stepped attenuator ($200\,\text{mV}, 2\,\text{V}, 20\,\text{V}, 200\,\text{V}$ full-scale ranges) is what enables the interface to scale high-voltage potentials down to the linear operating region of the op-amps.
+    \item Probing a high-voltage circuit (such as a power amplifier output or tube plate swinging $150\,\text{V}$ to $250\,\text{V}$) without attenuation would drive the OPA1656 inputs far past their $\pm 15\,\text{V}$ rails. The BAV199 clamping diodes would conduct continuously, shunting heavy fault current and severely clipping the waveform into a distorted square wave at $\pm 15.6\,\text{V}$.
+    \item The precision stepped attenuator ($1\times, 10\times, 100\times, 1000\times$ ranges) scales high-voltage potentials down to the linear operating region of the op-amp buffers, ensuring the buffer and instrumentation amplifier operate within their linear dynamic range.
 \end{itemize}
 
-\subsection{Rotary Range Switch Implementation}
+% =========================================================================
+% SECTION 5: ATTENUATOR LADDER & SWITCH ARCHITECTURE
+% =========================================================================
+\section{Attenuator Ladder, Switch Selection \& Interconnect Wiring}
+
+\subsection{Why Frequency Compensation Capacitors Are Not Required}
+Standard oscilloscope passive probes ($10\times, 100\times$) use $9\,\text{M}\Omega$ divider ladders. In those circuits, a $15\,\text{pF}$ input capacitance creates an uncompensated pole at $\approx 1.1\,\text{kHz}$, necessitating adjustable trimmer capacitors across every range.
+
+In this active interface, the entire attenuator ladder is scaled down to \textbf{$101.0\,\text{k}\Omega$ total resistance} ($90.9\,\text{k}\Omega + 9.09\,\text{k}\Omega + 909\,\Omega + 102\,\Omega$):
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Switch Topology Simplification:} With the elimination of the dual-rail analog metering circuit, the original multi-wafer 2-pole switch is simplified to a single-pole four-throw (1P4T) configuration per channel.
-    \item \textbf{Component Selection:} Alpha SR2611F 1-Pole, 12-Position rotary switch (SW4, SW4b). The included adjustable metal mechanical stop ring is locked at hole position 4, providing an exact, positive-stop 4-position action.
-    \item \textbf{Wiring Harness:} The switches are wired using 5 active conductors per channel (1 common input lead and 4 range taps). These conductors are bundled and tightly twisted to maintain high common-mode magnetic rejection.
+    \item \textbf{$1\times$ Range (Direct Buffer):} No resistive division; buffer input capacitance ($\approx 6\,\text{pF}$ total) is driven directly by the low-impedance source.
+    \item \textbf{$10\times$ Range (Worst-Case Divider Impedance):}
+    \begin{equation}
+        R_{\text{th}} = 90.9\,\text{k}\Omega \parallel (9.09\,\text{k}\Omega + 909\,\Omega + 102\,\Omega) \approx \mathbf{9.09\,\text{k}\Omega}
+    \end{equation}
+    The total node capacitance (OPA1656 $C_{\text{in}} = 3\,\text{pF}$, BAV199 $C_j = 1.5\,\text{pF}$, stray PCB $C_s \approx 1.5\,\text{pF}$) is $\approx 6.0\,\text{pF}$. The natural uncompensated high-frequency pole is:
+    \begin{equation}
+        f_{-3\text{dB}} = \frac{1}{2 \pi \times 9{,}090\,\Omega \times 6.0 \times 10^{-12}\,\text{F}} \approx \mathbf{2.92\,\text{MHz}}
+    \end{equation}
+    \item \textbf{$100\times$ Range:} $R_{\text{th}} \approx 1.0\,\text{k}\Omega \implies f_{-3\text{dB}} \approx \mathbf{26.5\,\text{MHz}}$.
+    \item \textbf{$1000\times$ Range:} $R_{\text{th}} \approx 102\,\Omega \implies f_{-3\text{dB}} \approx \mathbf{260\,\text{MHz}}$.
+\end{itemize}
+Because the worst-case pole sits comfortably above $2.0\,\text{MHz}$, frequency compensation capacitors across the ladder resistors are unnecessary. This eliminates phase-trim calibration procedures.
+
+\subsection{Resistor Power Dissipation \& Model Selection}
+The top ladder resistor ($R_{302} = 90.9\,\text{k}\Omega$) absorbs $90\%$ of the total input voltage.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabularx}{\linewidth}{@{} l c c c L @{}}
+        \toprule
+        \textbf{Operating State} & \textbf{Input} & \textbf{Drop across $R_{302}$} & \textbf{Dissipation} & \textbf{Thermal Load Assessment} \\
+        \midrule
+        $120\,\text{VAC}$ Mains & $120\,\text{V}_{\text{RMS}}$ & $108.0\,\text{V}_{\text{RMS}}$ & $0.128\,\text{W}$ & Runs cold ($21\%$ of 0.6W rating) \\
+        $\mathbf{150\,\text{V}_{\text{RMS}}}$ \textbf{Continuous} & $150\,\text{V}_{\text{RMS}}$ & $135.0\,\text{V}_{\text{RMS}}$ & $\mathbf{0.200\,\text{W}}$ & Safe continuous baseline ($33\%$ load) \\
+        $230\,\text{VAC}$ Mains & $230\,\text{V}_{\text{RMS}}$ & $207.0\,\text{V}_{\text{RMS}}$ & $0.471\,\text{W}$ & Within continuous envelope ($78\%$ load) \\
+        $\mathbf{250\,\text{V}_{\text{RMS}}}$ \textbf{Intermittent} & $250\,\text{V}_{\text{RMS}}$ & $225.0\,\text{V}_{\text{RMS}}$ & $\mathbf{0.557\,\text{W}}$ & Short-term test rating ($93\%$ load, $\le 5$\,min) \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Power dissipation profile across $R_{302}$ under operational conditions.}
+    \label{tab:resistor_stress}
+\end{table}
+
+\textbf{Selected Model: Vishay Dale CMF55.} Axial metal-film series ($90.9\,\text{k}\Omega \pm 0.1\%$, $0.6\,\text{W}$, $500\,\text{V}$ rating, $\pm 50\,\text{ppm}/^\circ\text{C}$). Body dimensions ($6.1\,\text{mm} \times 2.3\,\text{mm}$) fit neatly across switch lugs.
+
+\subsection{Rotary Switch Selection: Panel-Mount Models}
+To eliminate mechanical stress on the PCB and avoid long unshielded trace runs, the attenuator switch mounts to the front panel:
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{E-Switch KC14A13.001NLS:} Recommended bench value. 1-pole 4-position (SP4T), Break-Before-Make (BBM), solder eyelets, $1,000\,\text{V}_{\text{RMS}}$ dielectric withstand, $13.0\,\text{mm}$ flatted shaft with $9.8\,\text{mm}$ threaded bushing. Sits flush behind standard instrument knobs with no shaft trimming required.
+    \item \textbf{C\&K A-Series (A10403RNZQ / A10405RNZQ):} 1-pole 4-position (SP4T), $30^\circ$ indexing, BBM, solder lugs, coin-silver contacts ($<20\,\text{m}\Omega$), $1,000\,\text{V}_{\text{RMS}}$ dielectric rating. (\textit{Caution: Avoid `A124` variants, which feature an impractical $90^\circ$ throw per position}).
+\end{enumerate}
+
+\subsection{Resistor Mounting: Tangential Bending vs. Radial Halo}
+Switch solder lugs are spaced $\approx 4.0\text{ to }5.7\,\text{mm}$ center-to-center. Because the CMF55 resistor body is $6.1\,\text{mm}$ long, mounting leads must not be stressed against the body end-caps:
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, every node/.style={font=\small}]
+    % Switch body outline
+    \draw[thick, fill=black!5] (0,0) circle (2.2cm);
+    \node at (0, 0.3) {\bfseries Switch Rotor};
+    \node at (0, -0.2) {Center Axis};
+    \filldraw[black] (0,0) circle (2pt);
+
+    % Switch Lugs
+    \draw[thick, fill=white] (50:1.8) circle (0.18) node (L1) {};
+    \draw[thick, fill=white] (20:1.8) circle (0.18) node (L2) {};
+    \draw[thick, fill=white] (-10:1.8) circle (0.18) node (L3) {};
+    \draw[thick, fill=white] (-40:1.8) circle (0.18) node (L4) {};
+
+    \node[above right] at (L1) {Lug 1 ($1\times$)};
+    \node[right] at (L2) {Lug 2 ($10\times$)};
+    \node[right] at (L3) {Lug 3 ($100\times$)};
+    \node[below right] at (L4) {Lug 4 ($1000\times$)};
+
+    % Radial Halo Resistor Bodies
+    \draw[line width=1.5pt, blue!70!black] (50:1.8) -- (50:2.8) -- (35:3.0) -- (20:2.8) -- (20:1.8);
+    \node[draw, fill=blue!10, rounded corners=2pt, font=\footnotesize, rotate=-45] at (35:2.95) {$R_{302}$ ($90.9\,\text{k}\Omega$)};
+
+    \draw[line width=1.5pt, blue!70!black] (20:1.8) -- (20:2.8) -- (5:3.0) -- (-10:2.8) -- (-10:1.8);
+    \node[draw, fill=blue!10, rounded corners=2pt, font=\footnotesize, rotate=-75] at (5:2.95) {$R_{303}$ ($9.09\,\text{k}\Omega$)};
+
+    \draw[line width=1.5pt, blue!70!black] (-10:1.8) -- (-10:2.8) -- (-25:3.0) -- (-40:2.8) -- (-40:1.8);
+    \node[draw, fill=blue!10, rounded corners=2pt, font=\footnotesize, rotate=-105] at (-25:2.95) {$R_{304}$ ($909\,\Omega$)};
+
+    \node[above=0.8cm of L1, align=center, font=\footnotesize] {Wire 1 (Hot Input)\\from PCB Pin 1};
+    \draw[-{Latex[length=2mm]}, thick] (50:3.5) -- (50:1.95);
+
+    \node[below=0.8cm of L4, align=center, font=\footnotesize] {Wire 2 (GND Return)\\to PCB Pin 3};
+    \draw[-{Latex[length=2mm]}, thick] (-40:3.5) -- (-40:1.95);
+\end{tikzpicture}
+\end{center}
+
+Mounting the resistors in a \textbf{radial halo} $6\text{ to }8\,\text{mm}$ outside the lug perimeter provides:
+1. Complete thermal isolation from the switch body.
+2. Direct airflow cooling in open chassis space.
+3. Relaxed lead bending clearances with clear PTFE sleeving over exposed copper.
+
+\subsection{Why 5-Wire Bundles and Shielded Coax Fail at 2 MHz}
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Failure of 5 Flying Wires:} Routing 5 unshielded wires from the switch back to the PCB creates mutual stray capacitances ($5\text{ to }15\,\text{pF}$) between adjacent leads. High-voltage signals on the $1\times$ lead capacitively bypass the divider ladder and couple directly into the $100\times$ and $1000\times$ taps.
+    \item \textbf{Failure of Shielded Coax (RG-178):} Standard RG-178 cable exhibits a capacitance of $\approx 95\,\text{pF/m}$ ($2.4\,\text{pF/inch}$). A 3-inch run with grounded shield adds $\approx 8\text{ to }10\,\text{pF}$ of shunt capacitance to ground. For the $10\times$ tap ($R_{\text{th}} = 9.09\,\text{k}\Omega$), this rolls off the frequency response at:
+    \begin{equation}
+        f_{-3\text{dB}} = \frac{1}{2 \pi \times 9{,}090\,\Omega \times 16 \times 10^{-12}\,\text{F}} \approx \mathbf{1.09\,\text{MHz}}
+    \end{equation}
+    Grounded coaxial cable degrades bandwidth well below the $2.0\,\text{MHz}$ probe requirement.
 \end{itemize}
 
----
+\subsection{The 3-Wire ``Guarded Trio'' Harness \& 5-Pin PCB Header}
+By placing the divider resistors directly on the switch, \textbf{only 3 conductors route to the PCB}. These wires connect to a \textbf{5-pin right-angle header} on the board edge:
 
+\begin{center}
+\begin{tikzpicture}[scale=0.95, every node/.style={font=\small}]
+    % Header Box on PCB
+    \draw[thick, fill=black!5] (0,0) rectangle (10.5, 1.6);
+    \node[anchor=west, font=\bfseries] at (0.2, 1.25) {5-Pin Right-Angle PCB Header (2.54\,mm Pitch)};
+
+    % Header Pins
+    \draw[thick, fill=white] (1.0, 0.6) circle (0.25) node (P1) {\textbf{1}};
+    \draw[thick, fill=gray!30] (3.0, 0.6) circle (0.25) node (P2) {\textbf{2}};
+    \draw[thick, fill=white] (5.0, 0.6) circle (0.25) node (P3) {\textbf{3}};
+    \draw[thick, fill=gray!30] (7.0, 0.6) circle (0.25) node (P4) {\textbf{4}};
+    \draw[thick, fill=white] (9.0, 0.6) circle (0.25) node (P5) {\textbf{5}};
+
+    \node[below=0.15cm of P1, align=center, font=\footnotesize] {Pin 1: Hot In\\($353\,\text{V}_{\text{pk}}$ Max)};
+    \node[below=0.15cm of P2, align=center, font=\footnotesize\color{red!70!black}] {Pin 2: De-pinned\\(GND Guard Pad)};
+    \node[below=0.15cm of P3, align=center, font=\footnotesize] {Pin 3: Low-Z Ret\\(To $R_{305}$ / GND)};
+    \node[below=0.15cm of P4, align=center, font=\footnotesize\color{red!70!black}] {Pin 4: De-pinned\\(GND Guard Pad)};
+    \node[below=0.15cm of P5, align=center, font=\footnotesize] {Pin 5: Wiper\\(To $4.7\,\text{k}\Omega$ Fusible)};
+
+    % Wires extending out
+    \draw[line width=2pt, red!70!black] (1.0, 1.6) -- (1.0, 3.2) node[above, font=\footnotesize] {Wire 1: Hot In $\rightarrow$ Switch Lug 1};
+    \draw[line width=2pt, green!50!black] (5.0, 1.6) -- (5.0, 3.2) node[above, font=\footnotesize] {Wire 2: GND Guard $\rightarrow$ Switch Lug 4};
+    \draw[line width=2pt, blue!70!black] (9.0, 1.6) -- (9.0, 3.2) node[above, font=\footnotesize] {Wire 3: Wiper Ret $\leftarrow$ Switch Common};
+
+    \draw[dashed, line width=1pt, gray] (2.0, 2.0) -- (2.0, 3.0);
+    \draw[dashed, line width=1pt, gray] (8.0, 2.0) -- (8.0, 3.0);
+    \node[font=\scriptsize\color{black!70}] at (3.5, 2.4) {$\ge 5.08\,\text{mm}$ Creepage};
+    \node[font=\scriptsize\color{black!70}] at (6.5, 2.4) {$\ge 5.08\,\text{mm}$ Clearance};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Header Configuration Rules:}
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Creepage and Clearance:} Male header pins 2 and 4 are physically extracted from the connector block. This expands the center-to-center clearance between active conductors from $2.54\,\text{mm}$ to \textbf{$5.08\,\text{mm}$ ($0.200^{\prime\prime}$)}, meeting IPC-2221 requirements for $353\,\text{V}_{\text{peak}}$ transients.
+    \item \textbf{PCB Guard Trace:} The unpopulated pads for pins 2 and 4 connect directly to the analog ground plane, creating an electrostatic copper shield between the high-voltage trace (Pin 1) and the high-impedance wiper return (Pin 5).
+    \item \textbf{Wire Selection:} Wires are run using \textbf{MIL-W-16878/4 Type E stranded PTFE hookup wire} (24 AWG, rated for $600\,\text{V}_{\text{RMS}}$ continuous, $2,000\,\text{V}$ dielectric breakdown). Wire 2 (Low-Z return) is positioned physically between Wire 1 and Wire 3, acting as a floating electrostatic shield without introducing high shunt capacitance to ground.
+\end{enumerate}
+
+% =========================================================================
+% SECTION 6: BUFFER, INSTRUMENTATION AMP & CMRR
+% =========================================================================
 \section{Analog Buffer, Instrumentation Amplifier \& CMRR Optimization}
 
 \subsection{Operational Amplifier Selection: Texas Instruments OPA1656IDR}
-The dual operational amplifiers (U4, U5) serve as the high-impedance buffer stage. Precision measurements demand that the op-amp introduce negligible loading error and zero DC drift across the attenuator.
+The dual operational amplifiers (U302, U402) serve as the high-impedance buffer stage. Precision measurements demand that the op-amp introduce negligible loading error and zero DC drift across the attenuator.
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \small
-    \begin{tabularx}{\textwidth}{l L L L}
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabularx}{\textwidth}{@{} l L L L @{}}
         \toprule
         \textbf{Parameter} & \textbf{NE5532 (Legacy Bipolar)} & \textbf{OPA2134 (Legacy JFET)} & \textbf{OPA1656 (Selected CMOS)} \\
         \midrule
@@ -316,7 +621,7 @@ The dual operational amplifiers (U4, U5) serve as the high-impedance buffer stag
     \label{tab:opamp}
 \end{table}
 
-\textit{DC Offset Analysis:} Across the worst-case $100\text{ k}\Omega$ input resistance, a traditional bipolar op-amp (NE5532, $I_B \approx 72\text{ nA}$) develops an uncalibrated DC offset:
+\textit{DC Offset Analysis:} Across the worst-case $100\,\text{k}\Omega$ input resistance, a traditional bipolar op-amp (NE5532, $I_B \approx 72\,\text{nA}$) develops an uncalibrated DC offset:
 \begin{equation}
     V_{\text{offset}} = I_B \times R_{\text{in}} = 72 \times 10^{-9}\,\text{A} \times 100 \times 10^3\,\Omega = 7.2\,\text{mV}
 \end{equation}
@@ -326,34 +631,47 @@ In contrast, the OPA1656 generates:
 \end{equation}
 This negligible DC offset preserves high DC stability without requiring manual calibration.
 
-\subsection{Elimination of the DC Nulling Network ($R_{25}$)}
+\subsection{OPA1656 Feedback Optimization for 2 MHz Flatness}
+The OPA1656 buffer amplifiers operate with local feedback networks ($R_{309}, R_{310} = 7.5\,\text{k}\Omega$):
+\begin{itemize}[leftmargin=1.5em]
+    \item Prior designs utilized $10\text{ to }22\,\text{pF}$ feedback capacitors, causing bandwidth to roll off at $964\,\text{kHz}$ and degrading performance as a $2\,\text{MHz}$ scope probe.
+    \item In this revision, feedback capacitors ($C_{308}, C_{309}$) are set to \textbf{$4.7\,\text{pF}$ C0G/NP0}.
+    \item The high-frequency feedback pole is shifted to:
+    \begin{equation}
+        f_{\text{fb}} = \frac{1}{2 \pi \times 7{,}500\,\Omega \times 4.7 \times 10^{-12}\,\text{F}} \approx \mathbf{4.51\,\text{MHz}}
+    \end{equation}
+    This phase-lead zero stabilizes the buffer loop against board parasitics while maintaining flat frequency response (within $-0.3\,\text{dB}$) at $2.0\,\text{MHz}$. Unpopulated 0805 parallel pads ($C_{314}, C_{313}$) are provided for fine-tuning during testing.
+\end{itemize}
+
+\subsection{Elimination of the DC Nulling Network \texorpdfstring{($R_{25}$)}{(R25)}}
 In the original design, a $100\,\text{k}\Omega$ cermet potentiometer ($R_{25}$) was connected to the reference pin (Pin 1) of the INA134 difference amplifier to null DC offsets. 
 
 \textbf{Engineering Justification for Elimination:}
 \begin{enumerate}[label=\textbf{\arabic*.}]
     \item \textbf{Preservation of CMRR:} The Texas Instruments INA134 relies on four internal, on-chip thin-film resistors laser-trimmed to an absolute ratio match better than $0.005\%$. This precise matching guarantees a Common-Mode Rejection Ratio of $>90\,\text{dB}$ across the audio band. Injecting an external DC voltage into Pin 1 introduces source impedance non-linearities and temperature coefficients that unbalance the internal bridge, degrading CMRR by $15\,\text{dB}$ to $25\,\text{dB}$.
     \item \textbf{CMOS Buffer Zero Drift:} The OPA1656 features an input bias current of only $10\,\text{pA}$, reducing offset drift to negligible microvolt levels.
-    \item \textbf{Hardwired Ground Implementation:} Pin 1 of U7 and U9 is hardwired directly to the solid analog ground plane (AGND). Both target audio interfaces and oscilloscopes support software AC coupling, rendering sub-millivolt DC offsets irrelevant.
+    \item \textbf{Hardwired Ground Implementation:} Pin 1 of U303 and U403 is hardwired directly to the solid analog ground plane (AGND). Both target audio interfaces and oscilloscopes support software AC coupling, rendering sub-millivolt DC offsets irrelevant.
 \end{enumerate}
 
 \subsection{Removal of Grounding Switch (SW5) \& Monitor Switch (SW3)}
 Pete Millett's input section included `SW5` (which shunted the negative input $V_{\text{INN}}$ directly to local chassis ground) and `SW3` (which looped the signal generator back into the input). Both switches have been eliminated:
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Ground Loop Hazard with Oscilloscopes:} When connecting the interface output to the Siglent SDS804X HD, the interface's local analog ground becomes referenced to Mains Earth Ground via the scope's BNC cable shield. If `SW5` were closed while probing a circuit with a non-zero reference potential (such as a tube amplifier cathode bias network or a Class-D bridge-tied output), it would create a \textbf{direct short-circuit to Mains Earth}, vaporizing PCB traces or damaging the device under test.
-    \item \textbf{Permanent Floating Differential Operation:} By completely removing `SW5`, $V_{\text{INN}}$ is routed through DC blocking capacitor $C_2$ into the non-inverting input of buffer U4B. The front-end remains permanently floating and differential, providing complete galvanic safety regardless of switch settings.
+    \item \textbf{Ground Loop Hazard with Scopes:} Connecting the interface output to the Siglent SDS804X HD references local analog ground to Mains Earth Ground via the scope BNC shield. If `SW5` were closed while probing a non-zero circuit potential (such as a tube cathode bias network or Class-D bridge output), it would create a \textbf{direct short-circuit to Mains Earth}, vaporizing traces or damaging the device under test.
+    \item \textbf{Permanent Floating Differential Operation:} By completely removing `SW5`, $V_{\text{INN}}$ is routed through DC blocking capacitor $C_{303}$ into the non-inverting input of buffer U302B. The front-end remains permanently floating and differential, providing complete galvanic safety regardless of switch settings.
 \end{itemize}
 
----
-
+% =========================================================================
+% SECTION 7: HIGH-FREQUENCY STABILITY & PCB LAYOUT
+% =========================================================================
 \section{High-Frequency Stability, Layout \& Oscillation Prevention}
 
-The Texas Instruments OPA1656 is a wide-bandwidth operational amplifier ($f_{\text{unity}} = 53\text{ MHz}$). At these frequencies, parasitic board capacitances and load cable capacitances can erode amplifier phase margin, resulting in high-frequency ringing or sustained oscillation.
+The Texas Instruments OPA1656 is a wide-bandwidth operational amplifier ($f_{\text{unity}} = 53\,\text{MHz}$). At these frequencies, parasitic board capacitances and load cable capacitances can erode amplifier phase margin, resulting in high-frequency ringing or sustained oscillation.
 
 \subsection{Active Layout Stability Rules}
 \begin{enumerate}[label=\textbf{\alph*.}]
-    \item \textbf{Direct Rail Decoupling:} High-frequency surface-mount ceramic bypass capacitors ($0.1\,\mu\text{F}$ X7R, 0805) are placed directly against Pin 8 ($V+$) and Pin 4 ($V-$). Power traces route through the capacitor solder pad prior to entering the IC lead frame. A $10\,\mu\text{F}$ tantalum or low-ESR electrolytic capacitor is placed within $10\text{ mm}$ upstream on each rail.
-    \item \textbf{Feedback Phase Compensation ($C_{\text{fb}}$):} An 0805 capacitor footprint is routed in parallel with the main feedback resistor ($R_{\text{fb}}$). This footprint is populated with a $10\text{ pF}$ to $22\text{ pF}$ C0G/NP0 dielectric ceramic capacitor. This small feedback capacitance introduces a high-frequency zero in the loop transmission, providing phase lead to stabilize the internal pole against parasitic input capacitance.
-    \item \textbf{Series Output Isolation ($R_{28}$):} Driving capacitive coaxial cables directly from low-impedance op-amp outputs degrades phase margin according to $f_{\text{pole}} = \frac{1}{2 \pi R_o C_{\text{load}}}$. A dedicated $200\,\Omega$ thin-film resistor ($R_{28}$) isolates the INA134 output from cable capacitance.
+    \item \textbf{Direct Rail Decoupling:} High-frequency surface-mount ceramic bypass capacitors ($0.1\,\mu\text{F}$ X7R, 0805) are placed directly against Pin 8 ($V+$) and Pin 4 ($V-$). Power traces route through the capacitor solder pad prior to entering the IC lead frame. A $10\,\mu\text{F}$ tantalum or low-ESR electrolytic capacitor is placed within $10\,\text{mm}$ upstream on each rail.
+    \item \textbf{Feedback Phase Compensation ($C_{\text{fb}}$):} An 0805 capacitor footprint is routed in parallel with the main feedback resistor ($R_{\text{fb}}$). This footprint is populated with a $4.7\,\text{pF}$ C0G/NP0 dielectric ceramic capacitor ($C_{308}, C_{309}$).
+    \item \textbf{Series Output Isolation ($R_{311}$):} Driving capacitive coaxial cables directly from low-impedance op-amp outputs degrades phase margin according to $f_{\text{pole}} = \frac{1}{2 \pi R_o C_{\text{load}}}$. A dedicated $200\,\Omega$ thin-film resistor ($R_{311}$) isolates the INA134 output from cable capacitance.
 \end{enumerate}
 
 \subsection{PCB Floorplan \& Partitioning Strategy}
@@ -363,118 +681,137 @@ The Texas Instruments OPA1656 is a wide-bandwidth operational amplifier ($f_{\te
     \item \textbf{Isolated Ground Plane (AGND):} The secondary side of the board utilizes an unbroken, contiguous copper pour on Layer 2 dedicated exclusively to isolated analog ground. This provides low-impedance return paths and minimizes channel-to-channel crosstalk to below $-110\,\text{dB}$ at $1\,\text{kHz}$.
 \end{itemize}
 
----
-
-\section{Dual-Level Output Clamping \& Driver Subsystem}
+% =========================================================================
+% SECTION 8: DUAL-RANGE CLAMPING & UNIVERSAL OUTPUTS
+% =========================================================================
+\section{Dual-Level Output Clamping \& Universal Driver Subsystem}
 
 \subsection{Why Zener Diodes Cannot Be Placed in the Signal Path}
 When designing an overvoltage protection clamp for an audio measurement system, clamping diodes cannot simply be connected across the audio line:
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Junction Capacitance Non-Linearity:} Standard Zener diodes (e.g., 5.1\,V Zeners) exhibit massive junction capacitances ($C_j \approx 100\,\text{pF}$ to $400\,\text{pF}$). This capacitance varies non-linearly with applied signal voltage, generating significant harmonic distortion (THD).
+    \item \textbf{Junction Capacitance Non-Linearity:} Standard Zener diodes (e.g., 4.7\,V Zeners) exhibit massive junction capacitances ($C_j \approx 100\,\text{pF}$ to $400\,\text{pF}$). This capacitance varies non-linearly with applied signal voltage, generating significant harmonic distortion (THD).
     \item \textbf{Soft Reverse Breakdown Knee:} Zener diodes begin conducting microamps of leakage current well below their nominal breakdown rating. On audio peaks above $1\,\text{V}_{\text{RMS}}$, this leakage current clips signal peaks roundedly, introducing odd-order harmonics into measurements.
 \end{itemize}
 
 \subsection{The Off-Signal Zener Bias Bridge Topology}
-To achieve high-voltage clamping with zero audio-band distortion, this design keeps ultra-fast, low-capacitance switching diodes (\textbf{1N4148W}, $C_j < 2\,\text{pF}$) on the audio signal path while relocating the voltage-defining Zener diodes into the \textbf{DC power rail bias legs}.
+To achieve high-voltage clamping with zero audio-band distortion, this design maintains ultra-fast, low-capacitance steering diodes (\textbf{BAV199}, $C_j < 1.5\,\text{pF}$) on the audio line while moving the voltage-defining Zeners into the \textbf{DC power rail bias legs}:
 
 \begin{center}
-\small
-\begin{tabular}{l}
-\textbf{Positive Bias Rail (Node A):} \\
-$\quad +15\,\text{V} \longrightarrow [1\,\text{k}\Omega\ (R_{29})] \longrightarrow \textbf{Node A}$ \\
-$\quad \textbf{Node A} \longrightarrow \text{[Switch / Jumper]} \longrightarrow 
-\begin{cases} 
-D_{11}\text{ (1N4148)} \longrightarrow \text{AGND} & (\text{Solo: } V_A \approx +0.7\,\text{V}) \\
-DZ_1\text{ (4.7V Zener)} \longrightarrow \text{AGND} & (\text{M4/Scope: } V_A \approx +4.7\,\text{V})
-\end{cases}$ \\[1.2em]
-\textbf{Audio Clamping Path:} \\
-$\quad \text{INA134 Out} \longrightarrow [200\,\Omega\ (R_{28})] \longrightarrow \textbf{SCPROT} \longrightarrow \text{Outputs}$ \\
-$\quad \text{Cathode}(D_{10}) \longleftarrow \textbf{Node A} \quad\vert\quad \text{Anode}(D_{10}) \longleftarrow \textbf{SCPROT}$ \\[1.2em]
-\textbf{Negative Bias Rail (Node B):} \\
-$\quad -15\,\text{V} \longrightarrow [1\,\text{k}\Omega\ (R_{30})] \longrightarrow \textbf{Node B}$ \\
-$\quad \textbf{Node B} \longrightarrow \text{[Switch / Jumper]} \longrightarrow 
-\begin{cases} 
-D_{13}\text{ (1N4148)} \longrightarrow \text{AGND} & (\text{Solo: } V_B \approx -0.7\,\text{V}) \\
-DZ_2\text{ (4.7V Zener)} \longrightarrow \text{AGND} & (\text{M4/Scope: } V_B \approx -4.7\,\text{V})
-\end{cases}$ \\
-$\quad \text{Anode}(D_{12}) \longleftarrow \textbf{Node B} \quad\vert\quad \text{Cathode}(D_{12}) \longleftarrow \textbf{SCPROT}$
-\end{tabular}
+\begin{tikzpicture}[scale=0.9, every node/.style={font=\small}]
+    % SCPROT Audio Line
+    \draw[thick] (-3, 0) -- (7, 0);
+    \node[left] at (-3, 0) {\textbf{SCPROT} (Audio Node)};
+    \filldraw[black] (2, 0) circle (2pt);
+
+    % Upper Diode Leg (BAV199 D306)
+    \draw[thick] (2, 0) -- (2, 1.2);
+    \draw[thick] (1.7, 1.2) -- (2.3, 1.2) -- (2.0, 1.7) -- cycle; % Diode Symbol pointing UP
+    \draw[thick] (1.7, 1.7) -- (2.3, 1.7);
+    \draw[thick] (2, 1.7) -- (2, 2.5) node[above] {\textbf{Node A} ($+V_{\text{bias}}$)};
+
+    % Bias Network A
+    \draw[thick] (2, 2.5) -- (-0.5, 2.5) -- (-0.5, 3.5);
+    \node[draw, fill=white] at (-0.5, 3.8) {$R_{301}$ ($1\,\text{k}\Omega$)};
+    \draw[thick] (-0.5, 4.3) -- (-0.5, 4.8) node[above] {$+15\,\text{VDC}$};
+
+    % Jumper JP301
+    \draw[thick] (2, 2.5) -- (4.5, 2.5);
+    \draw[thick, fill=white] (4.5, 2.5) circle (0.1) node[above=2pt] {\footnotesize Pos 2 (M4)};
+    \draw[thick, fill=white] (5.5, 2.5) circle (0.1) node[above=2pt] {\footnotesize Pos 1 (Solo)};
+    \draw[thick, fill=black] (5.0, 2.0) circle (0.1) node[below=2pt] {\footnotesize Common};
+
+    \draw[thick] (4.5, 2.4) -- (4.5, 1.2);
+    \node[draw, fill=white, font=\footnotesize] at (4.5, 0.8) {DZ301 (4.7V)};
+    \draw[thick] (4.5, 0.4) -- (4.5, -0.05);
+    % Standard 3-line Ground symbol for DZ301
+    \draw[thick] (4.25, -0.05) -- (4.75, -0.05);
+    \draw[thick] (4.35, -0.13) -- (4.65, -0.13);
+    \draw[thick] (4.43, -0.21) -- (4.57, -0.21);
+
+    \draw[thick] (5.5, 2.4) -- (5.5, 1.2);
+    \node[draw, fill=white, font=\footnotesize] at (5.5, 0.8) {D301 (BAV199)};
+    \draw[thick] (5.5, 0.4) -- (5.5, -0.05);
+    % Standard 3-line Ground symbol for D301
+    \draw[thick] (5.25, -0.05) -- (5.75, -0.05);
+    \draw[thick] (5.35, -0.13) -- (5.65, -0.13);
+    \draw[thick] (5.43, -0.21) -- (5.57, -0.21);
+
+    % Lower Diode Leg (BAV199 D301)
+    \draw[thick] (2, 0) -- (2, -1.2);
+    \draw[thick] (1.7, -1.7) -- (2.3, -1.7) -- (2.0, -1.2) -- cycle; % Diode Symbol pointing DOWN
+    \draw[thick] (1.7, -1.2) -- (2.3, -1.2);
+    \draw[thick] (2, -1.7) -- (2, -2.5) node[below] {\textbf{Node B} ($-V_{\text{bias}}$)};
+
+    % Bias Network B
+    \draw[thick] (2, -2.5) -- (-0.5, -2.5) -- (-0.5, -3.5);
+    \node[draw, fill=white] at (-0.5, -3.8) {$R_{307}$ ($1\,\text{k}\Omega$)};
+    \draw[thick] (-0.5, -4.3) -- (-0.5, -4.8) node[below] {$-15\,\text{VDC}$};
+\end{tikzpicture}
 \end{center}
 
-\subsubsection{Circuit Operation and Clamping Thresholds}
-The signal node (`SCPROT`) connects to the anodes and cathodes of steering diodes D10 and D12. Under normal operation, D10 and D12 are reverse-biased by Node A ($+V_{\text{bias}}$) and Node B ($-V_{\text{bias}}$). Because the diodes are fully reverse-biased, they inject zero non-linear leakage into the audio line and present less than $2\,\text{pF}$ of total shunt capacitance.
-
-A DPDT toggle switch (SW1) or 3-pin hardware jumper block configures the bias nodes:
+\subsubsection{Clamping Threshold Calculations}
 \begin{enumerate}[label=\textbf{\arabic*.}]
-    \item \textbf{Position 1: Low Range (M-Audio Solo Mode):}
+    \item \textbf{Position 1 (M-Audio Solo Mode):}
     \begin{itemize}
-        \item Node A is clamped by diode D11 ($V_{f} \approx +0.7\,\text{V}$). Node B is clamped by diode D13 ($V_{f} \approx -0.7\,\text{V}$).
-        \item When an overvoltage occurs, D10 conducts once $V_{\text{signal}} > V_A + V_{f(\text{D10})} \approx 0.7\,\text{V} + 0.7\,\text{V} = \mathbf{+1.4\,\text{V}_{\text{peak}}}$.
-        \item Negative swings clamp at $\mathbf{-1.4\,\text{V}_{\text{peak}}}$ via D12 and D13.
-        \item Full-scale output is limited to $\approx 1.0\,\text{V}_{\text{RMS}}$, protecting the $16\text{-bit}$ M-Audio Solo ADC from overdriving and digital clipping.
+        \item Jumper \texttt{JP301}/\texttt{JP302} routes bias nodes to forward-biased diodes ($V_f \approx 0.70\,\text{V}$).
+        \item Node A is clamped at $+0.70\,\text{V}$; Node B is clamped at $-0.70\,\text{V}$.
+        \item Symmetrical signal clipping occurs at:
+        \begin{equation}
+            V_{\text{clamp}} = \pm(V_{\text{bias}} + V_{f(\text{steering})}) = \pm(0.70\,\text{V} + 0.70\,\text{V}) = \mathbf{\pm 1.40\,\text{V}_{\text{peak}}}
+        \end{equation}
+        This limits differential output to $\approx 1.0\,\text{V}_{\text{RMS}}$, protecting the 16-bit M-Audio Solo front-end from digital clipping.
     \end{itemize}
-    \item \textbf{Position 2: High Range (MOTU M4 \& Oscilloscope Mode):}
+    \item \textbf{Position 2 (MOTU M4 \& Oscilloscope Mode):}
     \begin{itemize}
-        \item Switch SW1 routes Node A through a 4.7\,V Zener diode ($DZ_1$, BZX84C4V7) and Node B through $DZ_2$.
-        \item Bias voltages stabilize at $V_A = +4.7\,\text{V}$ and $V_B = -4.7\,\text{V}$.
-        \item The signal clamps at $V_{\text{signal}} = \pm(4.7\,\text{V} + 0.7\,\text{V}) = \mathbf{\pm 5.4\,\text{V}_{\text{peak}}}$ ($\approx \mathbf{3.8\,\text{V}_{\text{RMS}}}$, or $\mathbf{+14.5\,\text{dBu}}$).
-        \item This higher threshold takes full advantage of the MOTU M4's $+18\,\text{dBu}$ max input headroom and provides a high signal-to-noise ratio into the SDS804X HD.
+        \item The bias nodes connect through \textbf{1SMB5917} $4.7\,\text{V}$ Zener diodes ($DZ_{301}, DZ_{302}$).
+        \item Node A sits at $+4.70\,\text{V}$; Node B sits at $-4.70\,\text{V}$.
+        \item Symmetrical signal clipping occurs at:
+        \begin{equation}
+            V_{\text{clamp}} = \pm(4.70\,\text{V} + 0.70\,\text{V}) = \mathbf{\pm 5.40\,\text{V}_{\text{peak}}} \quad (\mathbf{\approx 3.82\,\text{V}_{\text{RMS}}})
+        \end{equation}
+        This takes full advantage of the MOTU M4's $+18\,\text{dBu}$ ($6.15\,\text{V}_{\text{RMS}}$) line input headroom while protecting the converter.
     \end{itemize}
 \end{enumerate}
 
 \subsubsection{Bias Resistor Sizing and Noise Suppression}
 \begin{itemize}[leftmargin=1.5em]
-    \item \textbf{Current Calculation:} On the $\pm 15\,\text{V}$ split rails with $4.7\,\text{V}$ Zeners active:
+    \item \textbf{Bias Current:} With $4.7\,\text{V}$ Zeners active on $\pm 15\,\text{V}$ rails:
     \begin{equation}
-        I_{\text{bias}} = \frac{15\,\text{V} - 4.7\,\text{V}}{1{,}000\,\Omega} = 10.3\,\text{mA}
+        I_{\text{bias}} = \frac{15.0\,\text{V} - 4.70\,\text{V}}{1{,}000\,\Omega} = \mathbf{10.3\,\text{mA}}
     \end{equation}
-    \item \textbf{Power Dissipation:} Resistors $R_{29}$ and $R_{30}$ dissipate $P = (10.3\,\text{mA})^2 \times 1\,\text{k}\Omega = 106\,\text{mW}$. Standard 0805 or 1206 $0.25\,\text{W}$ resistors run cool with high reliability. Zener power dissipation is $4.7\,\text{V} \times 10.3\,\text{mA} = 48\,\text{mW}$, well below standard 350\,mW ratings.
-    \item \textbf{Avalanche Noise Shunting:} Zener diodes generate wideband avalanche shot noise. To prevent this noise from coupling into the bias nodes and modulating the steering diodes, a $0.1\,\mu\text{F}$ X7R ceramic bypass capacitor is placed in parallel across each Zener diode ($C_{z1}, C_{z2}$).
+    \item \textbf{Power Dissipation:} Resistors $R_{301}$ and $R_{307}$ dissipate $(10.3\,\text{mA})^2 \times 1\,\text{k}\Omega = 106\,\text{mW}$ ($0.25\,\text{W}$ rated). Zener power is $4.7\,\text{V} \times 10.3\,\text{mA} = 48.4\,\text{mW}$, well below the 1.5\,W rating of the 1SMB5917.
+    \item \textbf{Avalanche Shot Noise Shunting:} Zener diodes generate wideband avalanche noise. Capacitors $C_{301}$ and $C_{304}$ ($0.1\,\mu\text{F}$ X7R ceramic) are placed directly in parallel with each Zener to shunt shot noise to AGND.
 \end{itemize}
 
----
-
-\section{Universal Dual Output Stage: DRV135 \& BNC Tap}
-
+\subsection{Universal Dual Output Stage: DRV135 \& Dedicated Scope BNC Tap}
 Both channels feature two parallel, simultaneously active output connections:
 \begin{enumerate}[label=\textbf{\alph*.}]
-    \item \textbf{Unbalanced BNC Jack:} Directly tapped from the protected node (`SCPROT`) through series current-limiting resistor $R_{28}$ ($200\,\Omega$). This connector feeds directly into the SDS804X HD oscilloscope or unbalanced line-in soundcards.
-    \item \textbf{Balanced $1/4''$ TRS Jack:} Driven by a Texas Instruments \textbf{DRV135UA} balanced line driver (SOIC-8). The input of the DRV135 (Pin 4) taps the low-impedance `SCPROT` node. The DRV135 provides an exact laser-trimmed differential gain of $2\times$ ($+6\,\text{dB}$), driving long balanced shielded cables into the MOTU M4 rear Line Inputs 3 \& 4 with high common-mode ground noise rejection.
+    \item \textbf{Unbalanced BNC Jack (`J303`, `SCPROT`):} Directly tapped from the output of the INA134 difference amplifier through series isolation resistor $R_{311}$ ($200\,\Omega$ thin film). When connected to an oscilloscope with input termination set to $1\,\text{M}\Omega$, loading attenuation is negligible:
+    \begin{equation}
+        \text{Attenuation} = \frac{1{,}000{,}000\,\Omega}{1{,}000{,}000\,\Omega + 200\,\Omega} = 0.9998 \quad (-\mathbf{0.0017\,\text{dB}})
+    \end{equation}
+    This feeds directly into the Siglent SDS804X HD oscilloscope or unbalanced line-in soundcards.
+    \item \textbf{Balanced $1/4''$ TRS Jack (`J302`):} Driven by a Texas Instruments \textbf{DRV135UA} balanced line driver (SOIC-8). The DRV135 provides an exact laser-trimmed differential gain of $2\times$ ($+6\,\text{dB}$), driving long balanced shielded cables into the MOTU M4 rear Line Inputs 3 \& 4 with high common-mode ground noise rejection.
 \end{enumerate}
 
-\begin{table}[ht]
-    \centering
-    \small
-    \setlength{\tabcolsep}{5pt}
-    \begin{tabularx}{\linewidth}{>{\bfseries}l L L L}
-        \toprule
-        Instrument & Primary Role & Connection Mode & Clamp Range Setting \\
-        \midrule
-        M-Audio Solo & Basic audio FFT sweeps, isolated signal source & Rear BNC to 1/4" Line In or DRV135 to Ch 2 TRS & Solo Mode ($\pm 1.4\,\text{V}_{\text{pk}}$) \\
-        MOTU M4 & Precision 24-bit/192\,kHz audio analyzer & DRV135 TRS to Rear Line Inputs 3 \& 4 & M4 / Scope Mode ($\pm 5.4\,\text{V}_{\text{pk}}$) \\
-        SDS804X HD & High-voltage active floating probe (DC--500\,kHz+) & Rear BNC direct to Scope 1\,M$\Omega$ Channel & M4 / Scope Mode ($\pm 5.4\,\text{V}_{\text{pk}}$) \\
-        \bottomrule
-    \end{tabularx}
-    \caption{Multi-host connection and configuration schedule.}
-    \label{tab:hosts}
-\end{table}
-
----
-
+% =========================================================================
+% SECTION 9: MECHANICAL INTEGRATION & WIRING
+% =========================================================================
 \section{System Chassis Wiring \& Mechanical Integration}
 
 To ensure high-frequency stability with the 53\,MHz OPA1656 and preserve high CMRR, off-board panel controls must follow strict wiring practices:
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \small
+    \setlength{\tabcolsep}{4pt}
     \begin{tabularx}{\linewidth}{@{} l l L @{}}
         \toprule
         \textbf{Circuit Path} & \textbf{Conductor Type} & \textbf{Routing Specification} \\
         \midrule
         Main DC Power ($V_{\text{BUS}}$, GND) & 18 AWG Multi-strand Copper & Direct route from USB-C breakout to PCB power terminal; minimizes DC IR drop. \\
         Analog Audio Inputs \& Outputs & 24 AWG or 26 AWG Shielded Coax & Miniature RG-178 or high-flex shielded audio cable; drain shield tied at PCB star point. \\
-        Rotary Attenuator Controls & 24 AWG Discrete Twisted Harness & Tightly twisted bundle ($\ge 3$ twists per cm) to ensure external magnetic fields cancel. \\
+        Rotary Attenuator Controls & 24 AWG PTFE Discrete Trio & 3-wire guarded harness (Wire 2 in center) to 5-pin header; do not twist with coax. \\
         Enclosure Chassis Ground & 20 AWG Solid Copper & Direct bond to aluminum chassis star washer lug adjacent to USB-C ground plane. \\
         \bottomrule
     \end{tabularx}
@@ -485,74 +822,98 @@ To ensure high-frequency stability with the 53\,MHz OPA1656 and preserve high CM
 \subsection{Chassis Construction and RF Shielding}
 The complete assembly must be enclosed in an extruded aluminum enclosure (e.g., Hammond 1455 series). The aluminum chassis connects to signal ground at a single star point adjacent to the power input. All anodized layers must be cleared with a star washer to ensure low contact resistance between panels and chassis ground. Isolated Teflon front BNC connectors maintain the floating front-end reference.
 
----
+\clearpage
 
+% =========================================================================
+% SECTION 10: CONSOLIDATED BILL OF MATERIALS (BOM)
+% Anchored with [H] on a dedicated page to prevent floating separation
+% =========================================================================
 \section{Consolidated Hardware Bill of Materials (BOM)}
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \small
-    \setlength{\tabcolsep}{4pt}
+    \setlength{\tabcolsep}{3.5pt}
     \begin{tabularx}{\linewidth}{@{} l l l L @{}}
         \toprule
         \textbf{Designator} & \textbf{Component Function} & \textbf{Selected Part} & \textbf{Package / Specification} \\
         \midrule
-        U1 & Isolated DC-DC Converter & \textbf{JCA0305D03} & 3\,W, 5\,V In, $\pm 15$\,V Out, 1.5\,kV Isolation \\
-        U4, U5 & Dual Input Buffer (Ch 1, 2) & \textbf{OPA1656IDR} & SOIC-8, CMOS, 53\,MHz, 2.9\,nV/$\sqrt{\text{Hz}}$ \\
-        U7, U9 & Difference Amp (Ch 1, 2) & \textbf{INA134UA} & SOIC-8, Laser-Trimmed $>90$\,dB CMRR \\
-        U8, U10 & Balanced Line Driver (Ch 1, 2) & \textbf{DRV135UA} & SOIC-8, Low-Distortion Line Driver \\
-        Q1--Q8 & Overvoltage Current Limiter & \textbf{LND150N8-G} & SOT-89 Depletion MOSFET, 500\,V rated \\
-        D1--D8 & Input Clamping Diodes & \textbf{1N4148W} & SOD-123, Fast Switching, $C_j < 4$\,pF \\
-        $D_{10}$--$D_{17}$ & Output Pre-Biased Clamp & \textbf{1N4148W} & SOD-123, Reverse-biased low-capacitance clamp \\
-        $DZ_1$--$DZ_4$ & Voltage Rail Zeners & \textbf{BZX84C4V7} & SOT-23, 4.7\,V 350\,mW Zener Diode \\
-        F1 & Resettable Power Fuse & \textbf{SMD1812-110} & 1812 SMT, 1.1\,A Hold, 2.2\,A Trip, 16\,V \\
-        D9 & Primary Crowbar TVS & \textbf{SMCJ6.0A} & DO-214AB, 6.0\,V Standoff, 1500\,W Transient \\
+        U101 & Isolated DC-DC Converter & \textbf{XP Power JCA0305D03} & 3\,W, 5\,V In, $\pm 15$\,V Out, 1.5\,kV Isolation \\
+        U301, U401 & Balanced Line Driver (Ch 1, 2) & \textbf{DRV135UA} & SOIC-8, Laser-Trimmed $G=2$ ($+6\,\text{dB}$) \\
+        U302, U402 & Dual High-Z Buffer (Ch 1, 2) & \textbf{OPA1656IDR} & SOIC-8, CMOS, 53\,MHz, 2.9\,nV/$\sqrt{\text{Hz}}$ \\
+        U303, U403 & Difference Amp (Ch 1, 2) & \textbf{INA134UA} & SOIC-8, Laser-Trimmed $>90$\,dB CMRR \\
+        D305, D309 & Input Rail Steering Clamps & \textbf{BAV199} & SOT-23, Dual Diode, $I_R \le 5\,\text{pA}$, $C_j \le 1.5\,\text{pF}$ \\
+        D301, D306 & Output Steering Clamps & \textbf{BAV199} & SOT-23, Dual Diode, $I_R \le 5\,\text{pA}$, $C_j \le 1.5\,\text{pF}$ \\
+        DZ301, DZ302 & Voltage Bias Zeners & \textbf{1SMB5917BT3G} & SMB, 4.7\,V, 1.5\,W Zener Diode \\
+        D101 & Primary Crowbar TVS & \textbf{SMCJ6.0A} & DO-214AB, 6.0\,V Standoff, 1500\,W Transient \\
+        D105, D106 & Secondary Rail Clamping TVS & \textbf{SMAJ16A} & DO-214AC, 16.0\,V Standoff, Rail Kickback \\
+        D102 & Master 5V Power LED & \textbf{3mm / 0805 Red} & $V_f \approx 2.0\,\text{V}$, Primary Supply Status \\
+        D103, D104 & Analog Rail Status LEDs & \textbf{3mm / 0805 Green} & $V_f \approx 2.0\,\text{V}$, $\pm 15\,\text{VDC}$ Secondary Status \\
+        F101 & Resettable Power Fuse & \textbf{MF-MSMF110-2} & 1812 SMT, 1.1\,A Hold, 2.2\,A Trip, 16\,V \\
         \bottomrule
     \end{tabularx}
     \caption{Active Silicon, Power \& Protection Bill of Materials (Dual-Channel).}
     \label{tab:bom_active}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
     \centering
     \small
-    \setlength{\tabcolsep}{4pt}
+    \setlength{\tabcolsep}{3.5pt}
     \begin{tabularx}{\linewidth}{@{} l l l L @{}}
         \toprule
         \textbf{Designator} & \textbf{Component Function} & \textbf{Selected Part} & \textbf{Package / Specification} \\
         \midrule
-        C2, C3, C20, C21 & High-Voltage DC Blocking & \textbf{0.47\,$\mu$F 400\,V} & WIMA MKP4 Metallized Polypropylene Film \\
-        C22 & Primary Bulk Input Decoupling & \textbf{330\,$\mu$F 16\,V} & Low-ESR Radial / Aluminum Electrolytic \\
-        C7, C8, C13, C18 & Output Rail Bulk Filter & \textbf{330\,$\mu$F 25\,V} & Low-ESR Radial / Aluminum Electrolytic \\
-        $C_{\text{snub}}$ & DC-DC Switching Snubber & \textbf{0.1\,$\mu$F 50\,V} & 0805 X7R Ceramic, across JCA input pins \\
-        $C_{z1}$--$C_{z4}$ & Zener High-Frequency Bypass & \textbf{0.1\,$\mu$F 50\,V} & 0805 X7R Ceramic, in parallel with Zeners \\
-        $R_4$--$R_7$, $R_{4b}$--$R_{7b}$ & Precision Attenuator Ladders & \textbf{0.1\% Thin Film} & 90.9\,k$\Omega$, 9.09\,k$\Omega$, 909\,$\Omega$, 102\,$\Omega$ (0805) \\
-        $R_{28}, R_{28b}$ & Output Isolation / Impedance & \textbf{200\,$\Omega$ 1\%} & 0805 Thin Film, Native Unbalanced Tap \\
-        $R_{29,30}, R_{29b,30b}$ & Clamp Pre-Bias Resistors & \textbf{1\,k$\Omega$ 1\% 0.25W} & 1206 / 0805 Thin Film \\
-        SW4, SW4b & Attenuator Range Switches & \textbf{Alpha SR2611F} & 1-Pole 12-Position Rotary (Stopped at Pos 4) \\
-        SW1A, SW1B & Dual Clamp Range Selector & \textbf{DPDT Sub-Mini} & Panel Toggle / On-Board 3-Pin Jumpers \\
-        J1, J2 & Signal Input Connectors & \textbf{Amphenol BNC} & Chassis Mount Isolated Floating BNC \\
-        J3, J4 & Unbalanced Scope Outputs & \textbf{Isolated BNC} & Chassis Mount BNC, Tapped from $R_{28}$ \\
-        J5, J6 & Balanced Audio Outputs & \textbf{1/4" TRS Jack} & Neutrik / Rean NYS216 Isolated Jack \\
-        J7 & DC Power Input & \textbf{USB-C 6-Pin} & Surface Mount Power-Only with 5.1\,k$\Omega$ pulldowns \\
+        $R_{312}, R_{313}$ & Overvoltage Fault Limiters & \textbf{Vishay NFR25} & Axial Fusible, $4.7\,\text{k}\Omega \pm 5\%$, Socketed \\
+        $R_{302}, R_{402}$ & Attenuator Top Resistor & \textbf{Vishay CMF55} & Axial 0.6\,W 500\,V, $90.9\,\text{k}\Omega \pm 0.1\%$ \\
+        $R_{303}, R_{403}$ & Attenuator Middle Resistor & \textbf{Vishay CMF55} & Axial 0.6\,W 500\,V, $9.09\,\text{k}\Omega \pm 0.1\%$ \\
+        $R_{304}, R_{404}$ & Attenuator Low Resistor & \textbf{Vishay CMF55} & Axial 0.6\,W 500\,V, $909\,\Omega \pm 0.1\%$ \\
+        $R_{305}, R_{405}$ & Divider Shunt Resistor & \textbf{0.1\% Thin Film} & 0805 SMD, $102\,\Omega \pm 0.1\%$ \\
+        $R_{309}, R_{310}$ & Buffer Feedback Resistors & \textbf{0.1\% Thin Film} & 0805 SMD, $7.5\,\text{k}\Omega \pm 0.1\%$ \\
+        $R_{308}$ & Buffer Gain Resistor & \textbf{0.1\% Thin Film} & 0805 SMD, $10.0\,\text{k}\Omega \pm 0.1\%$ \\
+        $R_{311}$ & BNC Series Isolation Resistor & \textbf{1\% Thin Film} & 0805 SMD, $200\,\Omega \pm 1\%$ \\
+        $R_{301}, R_{307}$ & Clamp Pre-Bias Resistors & \textbf{1\% Thin Film} & 0805 SMD, $1.0\,\text{k}\Omega \pm 1\%$ \\
+        $R_{101}$ & Master LED Dropping Resistor & \textbf{1\% Thin Film} & 0805 SMD, $470\,\Omega \pm 1\%$ ($0.125\,\text{W}$) \\
+        $R_{102}, R_{103}$ & Rail LED Dropping Resistors & \textbf{1\% Thin Film} & 0805 SMD, $3.0\,\text{k}\Omega \pm 1\%$ ($0.125\,\text{W}$) \\
+        $R_{104}$ & Chassis Bleeder Resistor & \textbf{Flameproof Metal Film} & Axial 1\,W, $1.0\,\text{M}\Omega \pm 5\%$ High-Voltage \\
+        $C_{302}, C_{303}$ & DC Blocking Capacitors & \textbf{0.47\,$\mu$F 400\,V} & WIMA MKP4 Metallized Polypropylene \\
+        $C_{308}, C_{309}$ & 2\,MHz Feedback Capacitors & \textbf{4.7\,pF C0G/NP0} & 0805 SMD, 50\,V Ceramic ($\pm 0.25\,\text{pF}$) \\
+        $C_{313}, C_{314}$ & Feedback Tuning Pads & \textbf{DNP} & 0805 Unpopulated Footprints \\
+        $C_{301}, C_{304}$ & Zener Noise Shunt Capacitors & \textbf{0.1\,$\mu$F 50\,V} & 0805 X7R Ceramic Bypass \\
+        $C_{102}, C_{105}, C_{106}$ & DC-DC Switching Snubbers & \textbf{0.1\,$\mu$F 50\,V} & 0805 X7R Ceramic Bypass \\
+        C101 & Primary Bulk Input Decoupling & \textbf{330\,$\mu$F 25\,V} & Low-ESR Radial / Aluminum Electrolytic \\
+        C103, C104 & Secondary Output Rail Filters & \textbf{330\,$\mu$F 25\,V} & Low-ESR Radial / Aluminum Electrolytic \\
+        C107 & Chassis Ground Safety Cap & \textbf{10\,nF 1\,kV} & Radial Disc / SMD 1812 Ceramic, 1000\,V \\
+        SW102 & Master Primary Power Switch & \textbf{DPST / DPDT Toggle} & Panel Mount, 5V/GND disconnect \\
+        SW101 & Secondary Dual-Rail Switch & \textbf{DPDT Sub-Mini} & Panel Mount, $\pm 15\,\text{VDC}$ disconnect \\
+        SW301, SW401 & Panel Attenuator Switches & \textbf{KC14A13.001NLS} & E-Switch 1P4T BBM, Solder Lugs, 13\,mm Shaft \\
+        JP301, JP302 & Clamping Mode Selectors & \textbf{3-Pin Header} & $2.54\,\text{mm}$ Shunt Jumper or Sub-Mini Toggle \\
+        J101 & DC Power Input & \textbf{USB-C 6-Pin} & Surface Mount Power-Only with 5.1\,k$\Omega$ pulldowns \\
+        J102 & Chassis Ground Lug & \textbf{Turret / Eyelet Lug} & M3 / M4 Chassis Star-Washer Terminal \\
+        J301, J401 & Front Signal Inputs & \textbf{Isolated BNC} & Amphenol Bayonet, Isolated Chassis Bushing \\
+        J302, J402 & Balanced Audio Outputs & \textbf{1/4'' TRS Jack} & Neutrik / Rean NYS216 Isolated Jack \\
+        J303, J403 & Wideband Scope Outputs & \textbf{Chassis BNC} & Isolated BNC Tap through $R_{311}$ ($200\,\Omega$) \\
         \bottomrule
     \end{tabularx}
     \caption{Passive Components \& Electro-Mechanical Hardware Bill of Materials.}
     \label{tab:bom_passive}
 \end{table}
 
----
+\clearpage
 
+% =========================================================================
+% SECTION 11: BENCH COMMISSIONING WORKFLOW
+% =========================================================================
 \section{Bench Commissioning \& Verification Workflow}
 
 Once fabricated, the dual-channel interface should be validated following this step-by-step procedure:
 \begin{enumerate}[label=\textbf{\arabic*.}]
-    \item \textbf{Cold Resistance \& Isolation Verification:} With power disconnected, verify $>100\,\text{M}\Omega$ insulation resistance between the USB-C shield and the analog BNC shells using a high-voltage insulation tester or high-range DMM. Ensure Pin 1 of both INA134 ICs measures $< 0.1\,\Omega$ to isolated AGND.
-    \item \textbf{Power Rail Check:} Apply $+5\,\text{VDC}$ via USB-C. Verify that the JCA0305D03 output rails measure precisely between $\pm 14.85\,\text{V}$ and $\pm 15.15\,\text{V}$ with under $5\,\text{mV}_{\text{p-p}}$ switching ripple on the oscilloscope.
+    \item \textbf{Cold Resistance \& Isolation Verification:} With power disconnected and $SW_{102}$ open, verify $>100\,\text{M}\Omega$ insulation resistance between the USB-C shield and the analog BNC shells using a high-voltage insulation tester or high-range DMM. Ensure Pin 1 of both INA134 ICs measures $< 0.1\,\Omega$ to isolated AGND. Verify that $J_{102}$ measures $1.0\,\text{M}\Omega$ to isolated AGND.
+    \item \textbf{Power Rail Check:} Close Master Switch $SW_{102}$ while keeping Secondary Switch $SW_{101}$ open. Verify LED $D_{102}$ illuminates. Check test points TP101 and TP102 relative to TP103: rails must measure precisely between $\pm 14.85\,\text{V}$ and $\pm 15.15\,\text{V}$ with under $5\,\text{mV}_{\text{p-p}}$ switching ripple on the oscilloscope. Close $SW_{101}$ and verify LEDs $D_{103}$ and $D_{104}$ illuminate symmetrically.
     \item \textbf{Output Clamping Calibration:} 
     \begin{itemize}
-        \item Set SW1 to Low (Solo Mode). Inject a $1\,\text{kHz}$ sine wave into the front BNC and increase generator level. Observe on the SDS804X HD that the waveform begins symmetrical hard clipping at precisely $\pm 1.40\,\text{V}_{\text{peak}} \pm 0.05\,\text{V}$.
-        \item Flip SW1 to High (M4/Scope Mode). Verify that the clipping threshold shifts upward to $\pm 5.40\,\text{V}_{\text{peak}} \pm 0.15\,\text{V}$ without distortion on signals below $3.5\,\text{V}_{\text{RMS}}$.
+        \item Set JP301/JP302 to Low (Solo Mode). Inject a $1\,\text{kHz}$ sine wave into the front BNC and increase generator level. Observe on the SDS804X HD that the waveform begins symmetrical hard clipping at precisely $\pm 1.40\,\text{V}_{\text{peak}} \pm 0.05\,\text{V}$.
+        \item Set JP301/JP302 to High (M4/Scope Mode). Verify that the clipping threshold shifts upward to $\pm 5.40\,\text{V}_{\text{peak}} \pm 0.15\,\text{V}$ without distortion on signals below $3.5\,\text{V}_{\text{RMS}}$.
     \end{itemize}
     \item \textbf{Host Connection Protocols:}
     \begin{itemize}
@@ -562,8 +923,9 @@ Once fabricated, the dual-channel interface should be validated following this s
     \end{itemize}
 \end{enumerate}
 
----
-
+% =========================================================================
+% SECTION 12: SUMMARY & NEXT STEPS
+% =========================================================================
 \section{Summary \& Next Steps}
 
 This updated specification establishes a low-noise, dual-channel active differential probe and conditioning front-end serving the M-Audio Solo, MOTU M4, and SDS804X HD.
@@ -572,7 +934,7 @@ The immediate follow-on engineering tasks are:
 \begin{enumerate}[label=\textbf{\arabic*.}]
     \item Generate the complete schematic netlist in KiCad including all unified power, protection, attenuator, and buffer sheets.
     \item Finalize the mechanical drilling template for the Hammond extruded enclosure front/rear panels.
-    \item Execute PCB routing following the strict 2-layer star-grounding and high-frequency decoupling layout guidelines outlined in Section 5.
+    \item Execute PCB routing following the strict 2-layer star-grounding and high-frequency decoupling layout guidelines outlined in Section 7.
 \end{enumerate}
 
 \end{document}
