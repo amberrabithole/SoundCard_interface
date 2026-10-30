@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.9.30)  30 OCT 2026 00:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.9.30)  30 OCT 2026 17:46
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1188,13 +1188,13 @@ Package rerunfilecheck Info: File `Design.out' has not changed.
 Here is how much of TeX's memory you used:
  30007 strings out of 467392
  544310 string characters out of 5415748
- 979249 words of memory out of 5000000
+ 979250 words of memory out of 5000000
  58673 multiletter control sequences out of 15000+600000
  795870 words of font info for 252 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  102i,16n,107p,1043b,760s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/NewTXMI.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/NewTXMI5.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/NewTXMI7.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/tex-gyre/qhvr.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/tex-gyre/qtmb.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/tex-gyre/qtmr.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/txfonts/t1xbtt.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/txfonts/t1xtt.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/txbmiaX.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/txexs.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/txmiaX.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/txsys.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/ztmb.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/ztmr.pfb><C:/Users/shenz/AppData/Roaming/MiKTeX/fonts/type1/public/newtx/ztmri.pfb>
-Output written on Design.pdf (25 pages, 369338 bytes).
+Output written on Design.pdf (25 pages, 369305 bytes).
 PDF statistics:
  534 PDF objects out of 1000 (max. 8388607)
  138 named destinations out of 1000 (max. 500000)
