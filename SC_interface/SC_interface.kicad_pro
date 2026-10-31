@@ -646,12 +646,132 @@
           "label": "Datasheet",
           "name": "Datasheet",
           "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Check_prices",
+          "name": "Check_prices",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "DIGIKEY-PURCHASE-URL",
+          "name": "DIGIKEY-PURCHASE-URL",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "DigiKey_Part_Number",
+          "name": "DigiKey_Part_Number",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MF",
+          "name": "MF",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MOUSER-PURCHASE-URL",
+          "name": "MOUSER-PURCHASE-URL",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MP",
+          "name": "MP",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "PACKAGE",
+          "name": "PACKAGE",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "PRICE",
+          "name": "PRICE",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "PROD_ID",
+          "name": "PROD_ID",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Package",
+          "name": "Package",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Price",
+          "name": "Price",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Sim.Pins",
+          "name": "Sim.Pins",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "SnapEDA_Link",
+          "name": "SnapEDA_Link",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Availability",
+          "name": "Availability",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Description",
+          "name": "Description",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "AVAILABILITY",
+          "name": "AVAILABILITY",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "#",
+          "name": "${ITEM_NUMBER}",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "ARROW_ELECTRONICS-PURCHASE-URL",
+          "name": "ARROW_ELECTRONICS-PURCHASE-URL",
+          "show": false
+        },
+        {
+          "group_by": true,
+          "label": "Manufacturer",
+          "name": "Manufacturer",
+          "show": false
+        },
+        {
+          "group_by": true,
+          "label": "MPN",
+          "name": "MPN",
+          "show": false
         }
       ],
       "filter_string": "",
       "group_symbols": true,
       "include_excluded_from_bom": true,
-      "name": "Default Editing",
+      "name": "",
       "sort_asc": true,
       "sort_field": "Reference"
     },
@@ -696,7 +816,7 @@
         "uuid": "7297adbd-96ee-49f2-9956-85a279898d34"
       }
     ],
-    "used_designators": "U1-10,U101,U201-203,U301-303,#PWR1-72,#PWR101-108,#PWR201-222,#PWR301-322,D1-29,D101-106,D201-209,D301-309,F1-2,F101,J1-9,J101-102,J201-203,J301-303,#FLG101-103,R1-35,R101-104,R201-213,R301-313,C1-39,C101-108,C201-214,C301-314,SW1-4,SW101-102,SW201,SW301,Q1-12,Q201-204,Q301-304,JP1-10,JP201-202,JP301-302,DZ1-8,DZ201-202,DZ301-302,TP101-103,TP201-202,TP301-302",
+    "used_designators": "U1-10,U101,U201-203,U301-303,#PWR1-72,#PWR101-108,#PWR201-223,#PWR301-323,D1-29,D101-106,D201-209,D301-309,F1-2,F101,J1-9,J101-102,J201-204,J301-304,#FLG101-103,R1-35,R101-104,R201-213,R301-313,C1-39,C101-108,C201-214,C301-314,SW1-4,SW101-102,SW201,SW301,Q1-12,Q201-204,Q301-304,JP1-10,JP201-202,JP301-302,DZ1-8,DZ201-202,DZ301-302,TP101-103,TP201-202,TP301-302",
     "variants": []
   },
   "sheets": [
